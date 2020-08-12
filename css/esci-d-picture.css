@@ -1,0 +1,129 @@
+/*
+Program       esci-d-picture.css
+Author        Gordon Moore
+Date          11-August-2020
+Description   CSS for esci d-pictures
+Licence       GNU General Public LIcence Version 3, 29 June 2007
+*/
+
+/* #region Version history
+
+0.0.1   Initial version
+
+
+#endregion */
+
+/*------------------------------override on ion slider-----------------------------------*/
+/*blank out end labels*/
+.irs--big .irs-min {
+  color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0.0);
+}
+
+.irs--big .irs-max {
+  color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0.0);
+}
+
+/*---------------------------------icons-----------------------------------------------------------*/
+
+.icons {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+
+/*----------------------------------left panel-----------------------------------------------------*/
+
+
+
+/*---------------tab headers---------------------------------------------------------------------*/
+
+.nav-link {
+  font-size: 1.6rem !important;
+}
+
+/*----------------Panel 1 -------------------------------------------------------------------------*/
+
+
+
+.red {
+  color: red;
+}
+
+
+.greek2 {
+  font-size: 2.2rem;
+}
+
+/*----------------------Panel 2 -------------------------------------------------------------------*/
+
+
+
+/*----------------------Panel 3 -------------------------------------------------------------------*/
+
+
+
+/*----------------------------------display---------------------------------------------------------*/
+#rightpanel {
+  border: 1px solid grey;
+  display: grid;
+  grid-template-rows: 8rem auto 8rem 20rem;
+}
+
+/*---------------------------------top axis---------------------------------------------------------*/
+
+#topaxis {
+  background-color: white;
+  font-size: 1.0rem;
+  border: 1px solid green; 
+}
+
+.topaxistext {
+  font-size: 2.0rem;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.topaxisunits {
+  font-size: 1.8rem;
+  font-weight: bold; 
+}
+
+/*---------------------------------bottom axis---------------------------------------------------------*/
+
+#bottomaxis {
+  background-color: white;
+  font-size: 1.0rem;
+  border: 1px solid green;
+}
+
+.bottomaxistext {
+  font-size: 2.0rem;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/*----------------------------------pdf-------------------------------------------------------------*/
+
+#pdfdisplay {
+  border: 1px solid red; 
+  background-color: white;
+}
+
+
+/*----------------------------------x4--------------------------------------------------------------*/
+
+#x4 {
+  display: grid;
+  grid-template-columns: 25px 40px auto 25px 30px ;
+}
+
+
+
+/*----------------------------------------------------------------------------------------------------*/
+
+
+
+/*-----------------------------------------------------------------------------------------------------*/
+
