@@ -33,19 +33,13 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 }
 
 
-/*----------------------------------left panel-----------------------------------------------------*/
+/*----------------------------------Panels-----------------------------------------------------*/
 
-
-
-/*---------------tab headers---------------------------------------------------------------------*/
-
-.nav-link {
-  font-size: 1.6rem !important;
-}
-
-/*----------------Panel 1 -------------------------------------------------------------------------*/
-
-
+#panels {
+  border: 1px solid black; 
+  display: grid;
+  grid-template-rows: 5rem 5rem 5rem;
+} 
 
 .red {
   color: red;
@@ -55,6 +49,12 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 .greek2 {
   font-size: 2.2rem;
 }
+
+/*----------------Panel 1 -------------------------------------------------------------------------*/
+
+
+
+
 
 /*----------------------Panel 2 -------------------------------------------------------------------*/
 
@@ -68,7 +68,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #rightpanel {
   border: 1px solid grey;
   display: grid;
-  grid-template-rows: 8rem auto 8rem 20rem;
+  grid-template-rows: 0.1rem auto 5rem 2rem 15rem;  /*no topaxis...at moment*/
 }
 
 /*---------------------------------top axis---------------------------------------------------------*/
@@ -76,7 +76,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #topaxis {
   background-color: white;
   font-size: 1.0rem;
-  border: 1px solid green; 
+  /* border: 1px solid green;  */
 }
 
 .topaxistext {
@@ -95,7 +95,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #bottomaxis {
   background-color: white;
   font-size: 1.0rem;
-  border: 1px solid green;
+  /* border: 1px solid green; */
 }
 
 .bottomaxistext {
@@ -107,17 +107,120 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 /*----------------------------------pdf-------------------------------------------------------------*/
 
 #pdfdisplay {
-  border: 1px solid red; 
+  /* border: 1px solid red;  */
   background-color: white;
 }
 
+/*attached to the control curve and the cursor */
+.static {
+  cursor: not-allowed;
+}
 
-/*----------------------------------x4--------------------------------------------------------------*/
+/*attached to the experimental curve and the cursor */
+.draggable {
+  cursor: move;
+}
 
-#x4 {
+
+/*----------------------------------d slider--------------------------------------------------------------*/
+
+#sliderdisplayarea {
   display: grid;
   grid-template-columns: 25px 40px auto 25px 30px ;
+  height:6.0rem;
 }
+
+/*make text above zslider larger*/
+/* #zsliderdiv .irs--big .irs-from, #zsliderdiv .irs--big .irs-to, #zsliderdiv .irs--big .irs-single {
+  font-size: 1.7rem
+} */
+
+#dslider {
+  margin-top: 5.0rem;
+  margin-left: 0.0rem;
+  margin-right: 3.0rem;
+  font-size: 1.4rem;
+}
+
+.icons {
+  margin-top: 4.2rem;
+}
+
+/*background on fill outside the handles and rounded ends*/
+.ui-slider {
+  border-radius: 20px;
+  background-image: linear-gradient(lightgrey, white) !important;
+}
+
+/*the fill between the handles*/
+#dslider .ui-slider-range,
+#dslider .ui-slider-pip[class*=ui-slider-pip-selected] .ui-slider-line,
+#dslider .ui-slider-pip.ui-slider-pip-inrange .ui-slider-line {
+  background-image: linear-gradient(white, #5C9BD1, #B4D2EA) !important;
+}
+
+#dslider .ui-slider-range {
+  background-color: red !important;
+}
+
+/*style the handles*/
+.ui-slider-handle {
+  border-radius: 25px;
+  height: 28px !important;
+  width: 28px !important;
+  top: -10px !important;
+  margin-left: -11px;
+  background-image: radial-gradient( #A8B0B8,#F3F4F5 ) !important;
+}
+
+.ui-slider-handle:hover {
+  outline: none !important;
+  background-image: radial-gradient( grey,#F3F4F5 ) !important;
+}
+
+.ui-slider-handle:active {
+  border: 1px solid #F3F4F5;
+  outline: none !important;
+  background-image: radial-gradient( grey,#F3F4F5 ) !important;
+}
+
+/*style the label*/
+#dslider .ui-slider-tip {
+  visibility: visible !important;
+  background-color: lightyellow !important;
+  padding: 0.3rem;
+
+  opacity: 1;
+  top: -35px;
+  left: 2px;
+  font-size: 1.7rem;
+  width: 5.0rem;
+}
+
+#dslider .ui-slider-pip {
+  margin-left: -5px;  /*adjust where scale starts from */
+}
+
+/*style the tick marks*/ /*hide all ticks then reveal the ones we want - clever*/
+#dslider .ui-slider-pip .ui-slider-label {
+  color: blue;
+  font-size: 1.5rem !important;
+  /* display: none; */
+ }
+
+/* #dslider .ui-slider-pip:nth-of-type(5n+3) .ui-slider-line {
+  height: 8px;
+}
+
+#dslider .ui-slider-pip:nth-of-type(10n+3) .ui-slider-line {
+  height: 12px;
+}
+
+#dslider .ui-slider-pip:nth-of-type(10n+3) .ui-slider-label {
+  top: 16px;
+  display: block;
+} 
+*/
 
 
 

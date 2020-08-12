@@ -78,6 +78,8 @@ input[type=text] {
 
 /*--------------------------------------------Left Panel-----------------------------------------------*/
 
+/*WARNING THIS MAY BE DIFFERENT IN DIFFERENT APPS!!! */
+
 #leftpanel {
   border: 2px solid black; 
   display: grid;
