@@ -100,10 +100,20 @@ $(function() {
 
   let dsliderinuse = false;
 
-  $xbarexpval = $('#xbarexpval');
-  $sdexpval   = $('#sdexpval');
+  const $xbarexpval = $('#xbarexpval');
+  const $sdexpval   = $('#sdexpval');
 
-  $showexperimentalsliderpanel = $('#showexperimentalsliderpanel');
+  const $showexperimentalsliderpanel = $('#showexperimentalsliderpanel');
+
+  let prighttail;
+  let plefttail;
+  let middlearea;
+
+  const $areaEaboveC = $('#areaEaboveC');
+  const $areaCbelowE = $('#areaCbelowE');
+
+  let displace;
+
 
   //api for getting width, height of element - only gets element, not entire DOM
   // https://www.digitalocean.com/comxbarcontrolnity/tutorials/js-resize-observer
@@ -532,7 +542,7 @@ $(function() {
     svgP.selectAll('.cohensd').remove();
     //svgP.append('text').text('\u03b4 = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
     svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
-    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 +8)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
+    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 1)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
   }
 
   function updatedslider() {
@@ -554,6 +564,8 @@ $(function() {
 
     $xbarexpval.text(xbarexperimental.toFixed(1));
     $sdexpval.text(sdexperimental.toFixed(1));
+
+    drawAreaProbabilities();
   }
 
   /*--------------------------------------------Display areas------------------------------------------*/
@@ -561,23 +573,121 @@ $(function() {
   $shadeareaEaboveC.on('change', function() {
     shadeareaEaboveC = $shadeareaEaboveC.is(':checked');
     if (shadeareaEaboveC) {
-
+      drawAreaProbabilities();
     }
     else {
-
+      svgP.selectAll('.areaEaboveC').remove();
+      $areaEaboveC.text(0);
     }
-
   })
 
   $shadeareaCbelowE.on('change', function() {
-   shadeareaCbelowE = $shadeareaCbelowE.is(':checked');
-   if (shadeareaCbelowE) {
-
-   }
-   else {
-
-   }
+    shadeareaCbelowE = $shadeareaCbelowE.is(':checked');
+    if (shadeareaCbelowE) {
+      drawAreaProbabilities();
+    }
+    else {
+      svgP.selectAll('.areaCbelowE').remove();
+      $areaCbelowE.text(0);
+    }
   })  
+
+  function drawAreaProbabilities() {
+    svgP.selectAll('.areaEaboveC').remove();
+    svgP.selectAll('.areaCbelowE').remove();
+    svgP.selectAll('.areaBetween').remove();
+
+    if (shadeareaEaboveC) {
+      //fill the areas
+      arearighttail = d3.area()
+      .x(function(d) { return xb(d.x) })
+      .y1(y(0))
+      .y0(function(d) { if (d.x > xbarcontrol) return y(d.y); else return y(0); });
+
+      svgP.append('path').attr('class', 'areaEaboveC').attr('d', arearighttail(experimentalpdf)).attr('fill', 'mistyrose');
+      drawControlPDF();
+      drawExperimentalPDF();
+
+      //calculate the area (probability)
+      prighttail = 1 - jStat.normal.cdf(xbarcontrol, xbarexperimental, sdexperimental); 
+      $areaEaboveC.text((prighttail * 100).toFixed(1));
+
+    }
+    if (shadeareaCbelowE) {
+      //fill the areas
+      arealefttail = d3.area()
+      .x(function(d) { return xb(d.x) })
+      .y1(y(0))
+      .y0(function(d) { if (d.x < xbarexperimental) return y(d.y); else return y(0); });
+
+      svgP.append('path').attr('class', 'areaCbelowE').attr('d', arealefttail(controlpdf)).attr('fill', 'lightskyblue');
+      drawControlPDF();
+      drawExperimentalPDF();
+
+      //calculate the area (probability)
+      plefttail = jStat.normal.cdf(xbarexperimental, xbarcontrol, sdcontrol); 
+      $areaCbelowE.text((plefttail * 100).toFixed(1));
+    }
+
+    //shade middle area
+    if (shadeareaEaboveC && shadeareaCbelowE) {
+      middle = (xbarcontrol + xbarexperimental) / 2;
+      areamiddle = d3.area()
+      .x(function(d) { return xb(d.x) })
+      .y1(y(0))
+      .y0(function(d) { if (d.x > xbarcontrol && d.x < middle) return y(d.y); else return y(0); });
+
+      svgP.append('path').attr('class', 'areaMiddle').attr('d', areamiddle(experimentalpdf)).attr('fill', 'plum');
+
+      areamiddle = d3.area()
+      .x(function(d) { return xb(d.x) })
+      .y1(y(0))
+      .y0(function(d) { if (d.x > middle && d.x < xbarexperimental) return y(d.y); else return y(0); });
+
+      svgP.append('path').attr('class', 'areaMiddle').attr('d', areamiddle(controlpdf)).attr('fill', 'plum');
+
+
+      drawControlPDF();
+      drawExperimentalPDF();
+
+    }
+
+    //now draw probabilities on top of areas
+    if (shadeareaEaboveC) {
+      //now display on graph
+      //if boxes might collide ...
+      displace = Math.abs(xbarcontrol - xbarexperimental);
+      if (displace < 6 ) {
+        svgP.append('rect').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - displace + 10 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+        svgP.append('text').text((prighttail * 100).toFixed(1) + '%').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - displace + 10 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+      }
+      else {
+        svgP.append('rect').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - 22 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+        svgP.append('text').text((prighttail * 100).toFixed(1) + '%').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - 15 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+      }
+    }
+    if (shadeareaCbelowE) {
+      //now display on graph
+      //if boxes might collide ...
+      displace = Math.abs(xbarcontrol - xbarexperimental);
+      if (displace < 6 ) {
+        svgP.append('rect').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - displace - 65 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+        svgP.append('text').text((plefttail * 100).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - displace - 65 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+      }
+      else {
+        svgP.append('rect').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - 28 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+        svgP.append('text').text((plefttail * 100).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - 20 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'blue');
+      }
+    }
+    if (shadeareaEaboveC && shadeareaCbelowE) {
+      //draw overlap area
+      middle = (xbarcontrol + xbarexperimental) / 2;
+      middlearea = jStat.normal.cdf(xbarexperimental, xbarcontrol, sdcontrol) - jStat.normal.cdf(xbarcontrol, xbarcontrol, sdcontrol); 
+      svgP.append('rect').attr('class', 'areaBetween').attr('x', xb(middle) - 27 ).attr('y', y(18)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+      svgP.append('text').text((Math.abs((middlearea)*100)).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(middle) - 23 ).attr('y', y(15) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'black');
+
+    }
+  }
 
   /*---------------------------------------------Drag experimental curve------------------------------------*/
 
