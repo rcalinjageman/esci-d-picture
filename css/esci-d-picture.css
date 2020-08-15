@@ -32,35 +32,185 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
   height: 2.5rem;
 }
 
+/*----------------------------------Override left panel--------------------------------------------*/
+
+#leftpanel {
+  border: 2px solid black;
+}
+
+#header {
+  border: 0px solid black;
+}
+
+#breadcrumbs {
+  border: 1px solid black;
+}
 
 /*----------------------------------Panels-----------------------------------------------------*/
 
-#panels {
-  border: 1px solid black; 
-  display: grid;
-  grid-template-rows: 5rem 5rem 5rem;
-} 
+/* #panels {
+}  */
 
 .red {
   color: red;
 }
 
 
-.greek2 {
-  font-size: 2.2rem;
+.slidericons {
+  margin-top: 2.8rem;
 }
 
-/*----------------Panel 1 -------------------------------------------------------------------------*/
+.slidericons:hover {
+  background-color: lightgray;
+}
+
+.slidericons:active {
+  background-color: darkgrey;
+}
+
+/*----------------Panel 1 xbar sd control-------------------------------------------------------------------------*/
+
+#xbarsdcontroldiv {
+  padding-top: 1rem;
+}
+
+#xbarsdcontrol {
+  background-color: lightskyblue; /*#FFFF99;*/
+  padding-top: 0.5rem;
+  padding-left: 0.3rem;
+  border: 1px solid black;
+  height: 20rem;
+}
+
+#xbarcontrolsliderpanel {
+  display: grid;
+  grid-template-columns: 2.5rem 25rem 2rem 1rem 5rem;
+  grid-row-gap: 3rem;
+  margin-top: 0rem;
+}
+
+#xbarcontrolslider {
+  padding-top: -10rem;
+}
+
+#sdcontrolsliderpanel {
+  display: grid;
+  grid-template-columns: 2.5rem 25rem 2rem 1rem 5rem;
+  grid-row-gap: 3rem;
+  margin-top: 2rem;
+}
+
+.iconsxbarsdcontrol {
+  /* padding-top: 0.0rem; */
+  width: 2.5rem;
+  height: 2.5rem;
+}
 
 
 
+.iconsxbarsdcontrol:hover {
+  background-color: lightgrey;
+}
+
+.iconsxbarsdcontrol:active {
+  background-color: darkgrey;
+}
+
+#xbarcontroldiv {
+padding-top: 3.0rem; 
+margin-left: 0.5rem;
+}
+
+#sdcontroldiv {
+  padding-top: 2.8rem; 
+  margin-left: 0.5rem;
+}
+
+#xbarcontrolval {
+  margin-top: 2.8rem;
+  margin-left: 2rem;
+}
+
+#sdcontrolval {
+  margin-top: 2.8rem;
+  margin-left: 2rem;
+}
+
+/*----------------Panel 2 xbar sd experimental-------------------------------------------------------------------------*/
+
+#xbarsdexperimentaldiv {
+  padding-top: 1rem;
+}
+
+#xbarsdexperimental {
+  background-color: mistyrose;
+  padding-top: 0.5rem;
+  padding-left: 0.3rem;
+  border: 1px solid black;
+  height: 20rem;
+}
+
+#xbarexperimentalsliderpanel {
+  display: grid;
+  grid-template-columns: 2.5rem 25rem 2rem 1rem 5rem;
+  grid-row-gap: 3rem;
+  margin-top: 0rem;
+}
+
+#xbarexperimentalslider {
+  padding-top: -10rem;
+}
+
+#sdexperimentalsliderpanel {
+  display: grid;
+  grid-template-columns: 2.5rem 25rem 2rem 1rem 5rem;
+  grid-row-gap: 3rem;
+  margin-top: 2rem;
+}
+
+.iconsxbarsdexperimental {
+  /* padding-top: 0.0rem; */
+  width: 2.5rem;
+  height: 2.5rem;
+}
 
 
-/*----------------------Panel 2 -------------------------------------------------------------------*/
 
+.iconsxbarsdexperimental:hover {
+  background-color: lightgrey;
+}
+
+.iconsxbarsdexperimental:active {
+  background-color: darkgrey;
+}
+
+
+#xbarexperimentaldiv {
+padding-top: 3.0rem; 
+margin-left: 0.5rem;
+}
+
+#sdexperimentaldiv {
+  padding-top: 2.8rem; 
+  margin-left: 0.5rem;
+}
+
+#xbarexperimentalval {
+  margin-top: 2.8rem;
+  margin-left: 2rem;
+}
+
+#sdexperimentalval {
+  margin-top: 2.8rem;
+  margin-left: 2rem;
+}
 
 
 /*----------------------Panel 3 -------------------------------------------------------------------*/
+
+
+
+/*----------------------Panel 4 -------------------------------------------------------------------*/
 
 
 
@@ -126,101 +276,13 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 #sliderdisplayarea {
   display: grid;
-  grid-template-columns: 25px 40px auto 25px 30px ;
+  grid-template-columns: 20px 30px auto 20px 45px ;
   height:6.0rem;
 }
 
-/*make text above zslider larger*/
-/* #zsliderdiv .irs--big .irs-from, #zsliderdiv .irs--big .irs-to, #zsliderdiv .irs--big .irs-single {
-  font-size: 1.7rem
-} */
-
-#dslider {
-  margin-top: 5.0rem;
-  margin-left: 0.0rem;
-  margin-right: 3.0rem;
-  font-size: 1.4rem;
-}
-
 .icons {
-  margin-top: 4.2rem;
+  margin-top: 2.6rem;
 }
-
-/*background on fill outside the handles and rounded ends*/
-.ui-slider {
-  border-radius: 20px;
-  background-image: linear-gradient(lightgrey, white) !important;
-}
-
-/*the fill between the handles*/
-#dslider .ui-slider-range,
-#dslider .ui-slider-pip[class*=ui-slider-pip-selected] .ui-slider-line,
-#dslider .ui-slider-pip.ui-slider-pip-inrange .ui-slider-line {
-  background-image: linear-gradient(white, #5C9BD1, #B4D2EA) !important;
-}
-
-#dslider .ui-slider-range {
-  background-color: red !important;
-}
-
-/*style the handles*/
-.ui-slider-handle {
-  border-radius: 25px;
-  height: 28px !important;
-  width: 28px !important;
-  top: -10px !important;
-  margin-left: -11px;
-  background-image: radial-gradient( #A8B0B8,#F3F4F5 ) !important;
-}
-
-.ui-slider-handle:hover {
-  outline: none !important;
-  background-image: radial-gradient( grey,#F3F4F5 ) !important;
-}
-
-.ui-slider-handle:active {
-  border: 1px solid #F3F4F5;
-  outline: none !important;
-  background-image: radial-gradient( grey,#F3F4F5 ) !important;
-}
-
-/*style the label*/
-#dslider .ui-slider-tip {
-  visibility: visible !important;
-  background-color: lightyellow !important;
-  padding: 0.3rem;
-
-  opacity: 1;
-  top: -35px;
-  left: 2px;
-  font-size: 1.7rem;
-  width: 5.0rem;
-}
-
-#dslider .ui-slider-pip {
-  margin-left: -5px;  /*adjust where scale starts from */
-}
-
-/*style the tick marks*/ /*hide all ticks then reveal the ones we want - clever*/
-#dslider .ui-slider-pip .ui-slider-label {
-  color: blue;
-  font-size: 1.5rem !important;
-  /* display: none; */
- }
-
-/* #dslider .ui-slider-pip:nth-of-type(5n+3) .ui-slider-line {
-  height: 8px;
-}
-
-#dslider .ui-slider-pip:nth-of-type(10n+3) .ui-slider-line {
-  height: 12px;
-}
-
-#dslider .ui-slider-pip:nth-of-type(10n+3) .ui-slider-label {
-  top: 16px;
-  display: block;
-} 
-*/
 
 
 

@@ -3,7 +3,7 @@ Program       esci-d-picture.js
 Author        Gordon Moore
 Date          11 August 2020
 Description   The JavaScript code for esci-d-picture
-Licence       GNU General Public LIcence Version 3, 29 June 2007
+Licence       GNU General Public Licence Version 3, 29 June 2007
 */
 
 // #region Version history
@@ -48,19 +48,54 @@ $(function() {
   let experimentalpdf         = [];
 
   let xbarcontrol             = 100;
-  let xbarexperimental        = 110;
+  let xbarexperimental        = 107.5;
   let sdcontrol               = 15;
-  let sdexperimental          = 15;                                           //the population mean, standard deviation and degrees of freedom
+  let sdexperimental          = 15;       
+
+  let $xbarcontrolslider = $('#xbarcontrolslider');
+  let $sdcontrolslider   = $('#sdcontrolslider');
+
+  const $xbarcontrolnudgebackward         = $('#xbarcontrolnudgebackward');
+  const $xbarcontrolnudgeforward          = $('#xbarcontrolnudgeforward');
+  const $sdcontrolnudgebackward           = $('#sdcontrolnudgebackward');
+  const $sdcontrolnudgeforward            = $('#sdcontrolnudgeforward');
+
+  const $xbarcontrolval = $('#xbarcontrolval');
+  const $sdcontrolval   = $('#sdcontrolval');
+
+
+  let $xbarexperimentalslider = $('#xbarexperimentalslider');
+  let $sdexperimentalslider   = $('#sdexperimentalslider');
+
+  const $xbarexperimentalnudgebackward         = $('#xbarexperimentalnudgebackward');
+  const $xbarexperimentalnudgeforward          = $('#xbarexperimentalnudgeforward');
+  const $sdexperimentalnudgebackward           = $('#sdexperimentalnudgebackward');
+  const $sdexperimentalnudgeforward            = $('#sdexperimentalnudgeforward');
+
+  const $xbarexperimentalval = $('#xbarexperimentalval');
+  const $sdexperimentalval   = $('#sdexperimentalval');
+
   let h;
 
-  const $pdfdisplay = $('#pdfdisplay');
+  const $pdfdisplay            = $('#pdfdisplay');
 
-  const $dslider              = $('#dslider');                                //reference to slider
-  let cohensd;
+  let $dslider                 = $('#dslider');;                                                             //reference to slider
+  let cohensd = 0;
+
+  const $dnudgebackward        = $('#dnudgebackward');
+  const $dnudgeforward         = $('#dnudgeforward');
+
+  let pauseId;
+  let repeatId;
+  let delay = 50;
+  let pause = 500;
+
+  let isDragxbar = false;
+  let isDragsd   = false;
 
 
   //api for getting width, height of element - only gets element, not entire DOM
-  // https://www.digitalocean.com/community/tutorials/js-resize-observer
+  // https://www.digitalocean.com/comxbarcontrolnity/tutorials/js-resize-observer
   const resizeObserver = new ResizeObserver(entries => {
     entries.forEach(entry => {
       rwidth = entry.contentRect.width;
@@ -100,7 +135,15 @@ $(function() {
     //pdf display
     svgP = d3.select('#pdfdisplay').append('svg').attr('width', '100%').attr('height', '100%');
 
-    setupdSlider();
+    setupSliders();
+
+    $xbarcontrolval.val(xbarcontrol.toFixed(1));
+    $sdcontrolval.val(sdcontrol.toFixed(1));
+    $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+    $sdexperimentalval.val(sdexperimental.toFixed(1));
+
+    calcCohensd();
+    updatedslider();
 
     resize();
 
@@ -108,40 +151,121 @@ $(function() {
 
   }
 
-  function setupdSlider() {
-    //jQueryUI slider
-    $dslider.slider({
-      animate: 'fast',
+  function setupSliders() {
+    $('#xbarcontrolslider').ionRangeSlider({
+      skin: 'big',
+      type: 'single',
       min: 0,
-      max: 2,
-      range: false,
-      value: 0,
-      step: 0.01,
-
-      slide: function(e, ui) {
-        cohensd = ui.value;
-      },
-
-      change: function( event, ui ) {
-      },
-
-      stop: function( event, ui ) {
+      max: 200,
+      from: xbarcontrol,
+      step: 0.1,
+      grid: true,
+      grid_num: 4,
+      prettify: prettify1,
+      //on slider handles change
+      onChange: function (data) {
+        xbarcontrol = data.from;
+        $xbarcontrolval.val(xbarcontrol.toFixed(1));
+        redrawDisplay();
       }
-    });
+    })
+    $xbarcontrolslider = $('#xbarcontrolslider').data("ionRangeSlider");
 
-    //jQuery-ui-Slider-Pips
-    $dslider.slider()
-      .slider('pips', {
-        first: 'label',
-        pips: true,
-        last: 'label',
-        rest: 'label',
-        step: 20.0001,
-      })
-      .slider('float', {
-        // handle: true,
-        // pips: false
-      })
+    $('#sdcontrolslider').ionRangeSlider({
+      skin: 'big',
+      type: 'single',
+      min: 0,
+      max: 50,
+      from: sdcontrol, 
+      step: 0.1,
+      grid: true,
+      grid_num: 5,
+      prettify: prettify1,
+      //on slider handles change
+      onChange: function (data) {
+        sdcontrol = data.from;
+        if (sdcontrol < 1) {
+          sdcontrol = 1;
+          $sdcontrolslider.update({ from: sdcontrol });
+        }
+        $sdcontrolval.val(sdcontrol.toFixed(1));
+        redrawDisplay();
+      }
+    })
+    $sdcontrolslider = $('#sdcontrolslider').data("ionRangeSlider");
+
+    $('#xbarexperimentalslider').ionRangeSlider({
+      skin: 'big',
+      type: 'single',
+      min: 0,
+      max: 200,
+      from: xbarexperimental,
+      step: 0.1,
+      grid: true,
+      grid_num: 4,
+      prettify: prettify1,
+      //on slider handles change
+      onChange: function (data) {
+        xbarexperimental = data.from;
+        $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+        redrawDisplay();
+      }
+    })
+    $xbarexperimentalslider = $('#xbarexperimentalslider').data("ionRangeSlider");
+
+    $('#sdexperimentalslider').ionRangeSlider({
+      skin: 'big',
+      type: 'single',
+      min: 0,
+      max: 50,
+      from: sdexperimental, 
+      step: 0.1,
+      grid: true,
+      grid_num: 5,
+      prettify: prettify1,
+      //on slider handles change
+      onChange: function (data) {
+        sdexperimental = data.from;
+        if (sdexperimental < 1) {
+          sdexperimental = 1;
+          $sdexperimentalslider.update({ from: sdexperimental });
+        }
+        $sdexperimentalval.val(sdexperimental.toFixed(1));
+        redrawDisplay();
+      }
+    })
+    $sdexperimentalslider = $('#sdexperimentalslider').data("ionRangeSlider");
+
+
+    $('#dslider').ionRangeSlider({
+      skin: 'big',
+      grid: true,
+      type: 'single',
+      min: 0,
+      max: 4,
+      from: 0,
+      step: 0.01,
+      prettify: prettify2,
+      //on slider handles change
+      onChange: function (data) {
+        cohensd = data.from;
+        xbarexperimental = xbarcontrol + cohensd * sdexperimental;
+        redrawDisplay();
+      }
+    })
+    $dslider = $('#dslider').data("ionRangeSlider");
+  }
+
+  function prettify0(n) {
+    return n.toFixed(0);
+  }
+
+  function prettify1(n) {
+    return n.toFixed(1);
+  }
+
+  function prettify2(n) {
+    return n.toFixed(2);
   }
 
   function resize() {
@@ -193,6 +317,9 @@ $(function() {
     showbottomaxis = true;
     //setTopAxis();
     setBottomAxis();
+    
+    calcCohensd();
+    drawCohensd();
   }
   
   // function setTopAxis() {
@@ -221,7 +348,7 @@ $(function() {
 
   //     //add additional ticks
   //     //the minor ticks
-  //     let interval = d3.ticks(left-sigma, right+sigma, 10);  //gets an array of where it is putting tick marks
+  //     let interval = d3.ticks(left-sdcontrol, right+sigma, 10);  //gets an array of where it is putting tick marks
 
   //     let minortick;
   //     let minortickmark;
@@ -272,7 +399,7 @@ $(function() {
 
       let minortick;
       let minortickmark;
-      for (let i=0; i < interval.length; i += 1) {
+      for (let i=1; i < interval.length; i += 1) {
         minortick = (interval[i] - interval[i-1]) / 10;
         for (let ticks = 1; ticks <= 10; ticks += 1) {
           minortickmark = interval[i-1] + (minortick * ticks);
@@ -282,7 +409,7 @@ $(function() {
 
       //make larger middle tick
       let middle;
-      for (let i = 0; i < interval.length; i += 1) {
+      for (let i = 1; i < interval.length; i += 1) {
         middle = (interval[i] + interval[i-1]) / 2;
         svgBottomAxis.append('line').attr('class', 'bottomaxisminorticks').attr('x1', xb(middle)).attr('y1', 0).attr('x2', xb(middle) ).attr('y2', 10).attr('stroke', 'black').attr('stroke-width', 1);
       }
@@ -362,15 +489,45 @@ $(function() {
     h = d3.max(experimentalpdf, function(d, i) { return d.y; });
     svgP.append('line').attr('class', 'experimentalpdf draggable').attr('x1', xb(xbarexperimental)).attr('y1', y(0)).attr('x2', xb(xbarexperimental)).attr('y2', y(h + 5)).attr('stroke', 'red').attr('stroke-width', 2).attr('fill', 'none');
     
+    //draw a circle for where SD is
+    svgP.append('circle').attr('class', 'experimentalpdf draggable').attr('cx', xb(xbarexperimental + sdexperimental)).attr('cy', y(1)).attr('r', 5).attr('stroke', 'red').attr('stroke-width',  1).attr('fill', 'none')
+
   }
 
   function removeExperimentalPDF() {
     d3.selectAll('.experimentalpdf').remove();
   }
 
+  /*---------------------------------------------Interactive d----------------------------------------------*/
+
+  function calcCohensd() {
+    cohensd = (xbarexperimental - xbarcontrol) / sdcontrol;
+  }
+
+  function drawCohensd() {
+    svgP.selectAll('.cohensd').remove();
+    svgP.append('text').text('d = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black');
+  }
+
+  function updatedslider() {
+    $dslider.update({from: cohensd});
+  }
+
+  /*--------------------------------------------Redraw the Display------------------------------------------*/
+
+  function redrawDisplay() {
+    setBottomAxis();
+    createControl();
+    drawControlPDF();
+    createExperimental();
+    drawExperimentalPDF();
+    calcCohensd();
+    drawCohensd();
+  }
+
   /*---------------------------------------------Drag experimental curve------------------------------------*/
 
-  let isDragxbar = false;
+
   $pdfdisplay
     .mousedown(function(e) {
       //only if mouse on experimental cursor line
@@ -384,6 +541,9 @@ $(function() {
       if (currentX > xbarexperimental - 2 && currentX < xbarexperimental + 2) {
         isDragxbar = true;
       }
+      if (currentX > xbarexperimental + sdexperimental - 2 && currentX < xbarexperimental + sdexperimental + 2 ) {
+        isDragsd = true;
+      }
     })
     .mousemove(function(e) {
       if (isDragxbar) {
@@ -396,14 +556,33 @@ $(function() {
 
         if (xbarexperimental < left) xbarexperimental = left;
         if (xbarexperimental > right) xbarexperimental = right;
-        createExperimental();
-        drawExperimentalPDF();
+
+        updatedslider();
+        updatexbarexperimental();
+        $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+      }
+      if (isDragsd) {
+        let parentOffset = $(this).parent().offset();
+        let relX = e.pageX - parentOffset.left;
+        let wr = right - left;
+        let wp = xb(right) - xb(left);
+
+        //xbarexperimental = (relX - xb(left)) * wr/wp + left;
+        sdexperimental = (relX - xb(left)) * wr/wp + left - xbarexperimental;
+
+        if (sdexperimental < 1) sdexperimental = 1;
+        //if (xbarexperimental > right) xbarexperimental = right;
+
+        updatedslider();
+        updatesdexperimental();
+        $sdexperimentalval.val(sdexperimental.toFixed(1));
       }
       e.preventDefault();
       e.stopPropagation();
     })
     .mouseup(function(e) {
       isDragxbar = false;
+      isDragsd = false;
       e.preventDefault();
       e.stopPropagation();
     })
@@ -411,6 +590,336 @@ $(function() {
     $('#bottomaxis').on('mousemove', function(e) {
       e.preventDefault();
     })
+
+  /*---------------------------------------------Cohen d nudge bar ----------------------------------------------*/
+
+  //cohen d  nudge backwards
+  $dnudgebackward.on('mousedown', function() {
+    dnudgebackward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        dnudgebackward();
+      }, delay );
+    }, pause)  
+  })
+
+  $dnudgebackward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function dnudgebackward() {
+    cohensd -= 0.01;
+    if (cohensd < 0) cohensd = 0;
+    setdSlider();
+    redrawDisplay();
+  }
+  
+  //Cohen d nudge forwards
+  $dnudgeforward.on('mousedown', function() {
+    dnudgeforward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        dnudgeforward();
+      }, delay );
+    }, pause)
+  })
+
+  $dnudgeforward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function dnudgeforward() {
+    cohensd += 0.01;
+    if (cohensd > 2) cohensd = 2;
+    setdSlider();
+    redrawDisplay();
+  }
+
+  function setdSlider() {
+    updatedslider();
+    xbarexperimental = xbarcontrol + cohensd * sdexperimental;
+  }
+
+/*-----------------------------------------xbar sd control sliders --------------------------------------*/
+  
+//changes to the xbar control, sd control textboxes
+  $xbarcontrolval.on('change', function() {
+    if ( isNaN($xbarcontrolval.val()) ) {
+      $xbarcontrolval.val(xbarcontrol.toFixed(1));
+      return;
+    };
+    xbarcontol = parseFloat($xbarcontolval.val()).toFixed(1);
+    if (xbarcontol < 0) {
+      xbarcontol = 0;
+    }
+    if (xbarcontol > 200) {
+      xbarcontol = 200;
+    }
+    $xbarcontolval.val(xbarcontol.toFixed(1));
+    updatexbarcontrol();
+  })
+
+  //xbar control nudge backwards
+  $xbarcontrolnudgebackward.on('mousedown', function() {
+    xbarcontrolnudgebackward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        xbarcontrolnudgebackward();
+      }, delay );
+    }, pause)
+  })
+
+  $xbarcontrolnudgebackward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function xbarcontrolnudgebackward() {
+    xbarcontrol -= 0.1;
+    if (xbarcontrol < 0) xbarcontrol = 0;
+    $xbarcontrolval.val(xbarcontrol.toFixed(1));
+    updatexbarcontrol();
+  }
+
+  //xbar nudge forward
+  $xbarcontrolnudgeforward.on('mousedown', function() {
+    xbarcontrolnudgeforward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        xbarcontrolnudgeforward();
+      }, delay );
+    }, pause)
+  })
+
+  $xbarcontrolnudgeforward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function xbarcontrolnudgeforward() {
+    xbarcontrol += 0.1;
+    if (xbarcontrol > 200) xbarcontrol = 200;
+    $xbarcontrolval.val(xbarcontrol.toFixed(1));
+    updatexbarcontrol();
+  }
+
+  function updatexbarcontrol() {
+    $xbarcontrolslider.update({
+      from: xbarcontrol
+    })
+    redrawDisplay();
+  }
+
+
+  $sdcontrolval.on('change', function() {
+    if ( isNaN($sdcontrolval.val()) ) {
+      $sdcontrolval.val(sdcontrol.toFixed(1));
+      return;
+    }
+    sdcontrol = parseFloat($sdcontrolval.val()).toFixed(1);
+    if (sdcontrol < 1) {
+      sdcontrol = 1;
+    }
+    if (sdcontrol > 50) {
+      sdcontrol = 50;
+    }
+    $sdcontrolval.val(sdcontrol.toFixed(1));
+    updatesdcontrol();
+  })
+
+  //sdcontrol nudge backwards
+  $sdcontrolnudgebackward.on('mousedown', function() {
+    sdcontrolnudgebackward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        sdcontrolnudgebackward();
+      }, delay );
+    }, pause)
+  })
+
+  $sdcontrolnudgebackward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function sdcontrolnudgebackward() {
+    sdcontrol -= 0.1;
+    if (sdcontrol < 1) sdcontrol = 1;
+    $sdcontrolval.val(sdcontrol.toFixed(1));
+    updatesdcontrol();
+  }
+
+  //sdcontrol nudge forward
+  $sdcontrolnudgeforward.on('mousedown', function() {
+    sdcontrolnudgeforward();
+    pauseId = setTimeout(function() {
+      repeatId = setInterval ( function() {
+        sdcontrolnudgeforward();
+      }, delay );
+    }, pause)
+  })
+
+  $sdcontrolnudgeforward.on('mouseup', function() {
+    clearInterval(repeatId);
+    clearTimeout(pauseId);
+  })
+
+  function sdcontrolnudgeforward() {
+    sdcontrol += 0.1;
+    if (sdcontrol > 50) sdcontrol = 50;
+    $sdcontrolval.val(sdcontrol.toFixed(1));
+    updatesdcontrol();
+  } 
+
+  function updatesdcontrol() {
+    $sdcontrolslider.update({
+      from: sdcontrol
+    })
+    redrawDisplay();  
+  }
+
+
+/*-----------------------------------------xbar sd experimental sliders --------------------------------------*/
+  
+//changes to the xbar control, sd control textboxes
+$xbarexperimentalval.on('change', function() {
+  if ( isNaN($xbarexperimentalval.val()) ) {
+    $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+    return;
+  };
+  xbarcontol = parseFloat($xbarcontolval.val()).toFixed(1);
+  if (xbarcontol < 0) {
+    xbarcontol = 0;
+  }
+  if (xbarcontol > 200) {
+    xbarcontol = 200;
+  }
+  $xbarcontolval.val(xbarcontol.toFixed(1));
+  updatexbarexperimental();
+})
+
+//xbar experimental nudge backwards
+$xbarexperimentalnudgebackward.on('mousedown', function() {
+  xbarexperimentalnudgebackward();
+  pauseId = setTimeout(function() {
+    repeatId = setInterval ( function() {
+      xbarexperimentalnudgebackward();
+    }, delay );
+  }, pause)
+})
+
+$xbarexperimentalnudgebackward.on('mouseup', function() {
+  clearInterval(repeatId);
+  clearTimeout(pauseId);
+})
+
+function xbarexperimentalnudgebackward() {
+  xbarexperimental -= 0.1;
+  if (xbarexperimental < 0) xbarexperimental = 0;
+  $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+  updatexbarexperimental();
+}
+
+//xbar nudge forward
+$xbarexperimentalnudgeforward.on('mousedown', function() {
+  xbarexperimentalnudgeforward();
+  pauseId = setTimeout(function() {
+    repeatId = setInterval ( function() {
+      xbarexperimentalnudgeforward();
+    }, delay );
+  }, pause)
+})
+
+$xbarexperimentalnudgeforward.on('mouseup', function() {
+  clearInterval(repeatId);
+  clearTimeout(pauseId);
+})
+
+function xbarexperimentalnudgeforward() {
+  xbarexperimental += 0.1;
+  if (xbarexperimental > 200) xbarexperimental = 200;
+  $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+  updatexbarexperimental();
+}
+
+function updatexbarexperimental() {
+  $xbarexperimentalslider.update({
+    from: xbarexperimental
+  })
+  redrawDisplay();
+}
+
+
+$sdexperimentalval.on('change', function() {
+  if ( isNaN($sdexperimentalval.val()) ) {
+    $sdexperimentalval.val(sdexperimental.toFixed(1));
+    return;
+  }
+  sdexperimental = parseFloat($sdexperimentalval.val()).toFixed(1);
+  if (sdexperimental < 1) {
+    sdexperimental = 1;
+  }
+  if (sdexperimental > 50) {
+    sdexperimental = 50;
+  }
+  $sdexperimentalval.val(sdexperimental.toFixed(1));
+  updatesdexperimental();
+})
+
+//sdexperimental nudge backwards
+$sdexperimentalnudgebackward.on('mousedown', function() {
+  sdexperimentalnudgebackward();
+  pauseId = setTimeout(function() {
+    repeatId = setInterval ( function() {
+      sdexperimentalnudgebackward();
+    }, delay );
+  }, pause)
+})
+
+$sdexperimentalnudgebackward.on('mouseup', function() {
+  clearInterval(repeatId);
+  clearTimeout(pauseId);
+})
+
+function sdexperimentalnudgebackward() {
+  sdexperimental -= 0.1;
+  if (sdexperimental < 1) sdexperimental = 1;
+  $sdexperimentalval.val(sdexperimental.toFixed(1));
+  updatesdexperimental();
+}
+
+//sdexperimental nudge forward
+$sdexperimentalnudgeforward.on('mousedown', function() {
+  sdexperimentalnudgeforward();
+  pauseId = setTimeout(function() {
+    repeatId = setInterval ( function() {
+      sdexperimentalnudgeforward();
+    }, delay );
+  }, pause)
+})
+
+$sdexperimentalnudgeforward.on('mouseup', function() {
+  clearInterval(repeatId);
+  clearTimeout(pauseId);
+})
+
+function sdexperimentalnudgeforward() {
+  sdexperimental += 0.1;
+  if (sdexperimental > 50) sdexperimental = 50;
+  $sdexperimentalval.val(sdexperimental.toFixed(1));
+  updatesdexperimental();
+} 
+
+function updatesdexperimental() {
+  $sdexperimentalslider.update({
+    from: sdexperimental
+  })
+  redrawDisplay();  
+}
+
+
 
   /*---------------------------------------------Tooltips on or off-------------------------------------- */
 
