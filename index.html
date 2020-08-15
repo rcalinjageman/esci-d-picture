@@ -60,7 +60,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
     <div id=main>
 
       <div id=leftpanel>
-        <!----------------------------------Main heading---------------------------------->
+<!----------------------------------Main heading---------------------------------->
         <div id=header>
           <div id=logo><img id=logoimg src=./images/logo.png></div>
           <div id=mainheading class=headingtip data-tooltip>esci web</div>
@@ -74,7 +74,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 <!-------------------------------------1 xbar sd control----------------------------------------->                
 
           <div id=xbarsdcontrol>
-            <span class=xbarsdcontroltip data-tooltip><span class=red>1 </span>Set control <em>X</em> and <em>s</em></span>
+            <span class=xbarsdcontroltip data-tooltip><strong><span class=red>1 </span>Set control <em>X</em> and <em>s</em></span></strong>
  
 
             <div id=xbarsdcontroldiv>
@@ -97,10 +97,22 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
             </div> 
           </div>
 
-          <!-------------------------------------2 xbar sd experimental----------------------------------------->                
+<!-------------------------------------2a xbar sd experimental display only----------------------------------------->                
+
+          <div id=xbassdexperimentaldisplayonly>
+            <span class=xbarsdexperimentaldisplayonlytip data-tooltip><strong><span class=red>2 </span>Set experimental <em>X</em> and <em>s</em></strong></span>
+            <div id=xbarsdexpdiv>
+              <div><em>X<sub>e </sub>: </em><span id=xbarexpval>0</span></div>
+              <div><em>s<sub>e </sub>: </em><span id=sdexpval>0</span></div>
+              <div id=showexppanel>Show experimental slider panel <input id=showexperimentalsliderpanel type=checkbox></div>
+            </div>
+          </div>
+
+
+<!-------------------------------------2b xbar sd experimental----------------------------------------->                
 
           <div id=xbarsdexperimental>
-            <span class=xbarsdexperimentaltip data-tooltip><span class=red>1 </span>Set experimental <em>X</em> and <em>s</em></span>
+            <span class=xbarsdexperimentaltip data-tooltip><strong><span class=red>2 </span>Experimental <em>X</em> and <em>s</em></span></strong>
  
 
             <div id=xbarsdexperimentaldiv>
@@ -123,21 +135,28 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
             </div> 
           </div>
 
-<!-------------------------------------2 ----------------------------------------->                
 
-          <div id=x2>
-            
+<!-------------------------------------3 Areas ----------------------------------------->                
+
+          <div id=areas>
+            <span class=areastip data-tooltip><span class=red>3 </span><strong>Areas</strong></span>
+            <div id=shadelabel>Shade?</div>
+            <div id=areassection>
+              <div>Area of E above mean of C</div>
+              <div id=areaEaboveC>0</div><span>%</span>
+              <input id=shadeareaEaboveC type=checkbox>
+
+              <div>Area of C below mean of E</div>
+              <div id=areaCbelowE>0</div><span>%</span>
+              <input id=shadeareaCbelowE type=checkbox>
+
+            </div>
           </div>
 
-<!-------------------------------------3 ----------------------------------------->                
-
-          <div id=x3>
-            
-          </div>
 <!--------------------------------end of panels------------------------------------------>
         </div>
 
-        <!---------------------------------Footer---------------------------------------------->
+<!---------------------------------Footer---------------------------------------------->
         <div id=footer>
           <div id=footerlink data-tooltip>Click to return to the New Statistics site</div>
         </div>
@@ -151,12 +170,12 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
         <div id=pdfdisplay></div>
         <div id=bottomaxis></div>
 
-        <!----------------------------------------Cohen's d Slider---------------------------------------------------->
+<!----------------------------------------Cohen's d Slider---------------------------------------------------->
 
-        <div>Cohen's <em>d</em></div>
+        
         
         <div id=sliderdisplayarea>
-          <div></div>
+          <div id=cohensdtitle>Cohen's <em>d</em></div>
           <div></div>
           <input id=dslider type=text/>
           <div><img id=dnudgebackward class="icons slidericons" src=./images/left.png alt='nudge backwards'></div>

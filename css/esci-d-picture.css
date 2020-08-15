@@ -77,7 +77,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #xbarsdcontrol {
   background-color: lightskyblue; /*#FFFF99;*/
   padding-top: 0.5rem;
-  padding-left: 0.3rem;
+  padding-left: 0.5rem;
   border: 1px solid black;
   height: 20rem;
 }
@@ -136,7 +136,7 @@ margin-left: 0.5rem;
   margin-left: 2rem;
 }
 
-/*----------------Panel 2 xbar sd experimental-------------------------------------------------------------------------*/
+/*----------------Panel 2a xbar sd experimental-------------------------------------------------------------------------*/
 
 #xbarsdexperimentaldiv {
   padding-top: 1rem;
@@ -145,7 +145,7 @@ margin-left: 0.5rem;
 #xbarsdexperimental {
   background-color: mistyrose;
   padding-top: 0.5rem;
-  padding-left: 0.3rem;
+  padding-left: 0.5rem;
   border: 1px solid black;
   height: 20rem;
 }
@@ -205,10 +205,50 @@ margin-left: 0.5rem;
   margin-left: 2rem;
 }
 
+/*----------------------Panel 2b xbar abd sd experimental display values only-------------------------------------------------------------------*/
+.xbarsdexperimentaldisplayonlytip {
+  font-size: 1.3rem;
+}
 
-/*----------------------Panel 3 -------------------------------------------------------------------*/
+#xbarsdexpdiv {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 
+#xbassdexperimentaldisplayonly {
+  padding-left: 0.5rem;
+  border: 1px solid black;
+  background-color: mistyrose;
+  font-size: 1.7rem;
+}
 
+#showexppanel {
+  font-size: 1.3rem;
+}
+
+/* #showexperimentalsliderpanel {
+
+} */
+
+/*----------------------Panel 3 Areas-------------------------------------------------------------------*/
+
+#areas {
+  border: 1px solid black;
+  background-color: #FFCC99;  
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+#shadelabel {
+  margin-top: 1rem;
+  margin-left: 27rem;
+}
+
+#areassection {
+  display: grid;
+  grid-template-columns: 20rem 4rem 3rem auto;
+
+}
 
 /*----------------------Panel 4 -------------------------------------------------------------------*/
 
@@ -273,10 +313,14 @@ margin-left: 0.5rem;
 
 
 /*----------------------------------d slider--------------------------------------------------------------*/
+#cohensdtitle {
+  padding-left: 1rem;
+  padding-top: 3rem;
+}
 
 #sliderdisplayarea {
   display: grid;
-  grid-template-columns: 20px 30px auto 20px 45px ;
+  grid-template-columns: 8rem 2rem auto 2rem 15em;
   height:6.0rem;
 }
 

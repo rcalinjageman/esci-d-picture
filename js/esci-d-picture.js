@@ -93,6 +93,17 @@ $(function() {
   let isDragxbar = false;
   let isDragsd   = false;
 
+  const $shadeareaEaboveC = $('#shadeareaEaboveC');
+  let shadeareaEaboveC = false;
+  const $shadeareaCbelowE = $('#shadeareaCbelowE');
+  let shadeareaCbelowE = false;
+
+  let dsliderinuse = false;
+
+  $xbarexpval = $('#xbarexpval');
+  $sdexpval   = $('#sdexpval');
+
+  $showexperimentalsliderpanel = $('#showexperimentalsliderpanel');
 
   //api for getting width, height of element - only gets element, not entire DOM
   // https://www.digitalocean.com/comxbarcontrolnity/tutorials/js-resize-observer
@@ -114,6 +125,9 @@ $(function() {
   initialise();
 
   function initialise() {
+
+    //hide experimental xbar and sd panel
+    $('#xbarsdexperimental').hide();
 
     setTooltips();
 
@@ -141,6 +155,9 @@ $(function() {
     $sdcontrolval.val(sdcontrol.toFixed(1));
     $xbarexperimentalval.val(xbarexperimental.toFixed(1));
     $sdexperimentalval.val(sdexperimental.toFixed(1));
+
+    $xbarexpval.text(xbarexperimental.toFixed(1));
+    $sdexpval.text(sdexperimental.toFixed(1));
 
     calcCohensd();
     updatedslider();
@@ -250,6 +267,7 @@ $(function() {
       onChange: function (data) {
         cohensd = data.from;
         xbarexperimental = xbarcontrol + cohensd * sdexperimental;
+        dsliderinuse = true;  //don't update dslider in redrawdisplay()
         redrawDisplay();
       }
     })
@@ -299,6 +317,12 @@ $(function() {
 
     drawControlPDF();
     drawExperimentalPDF();
+
+    $shadeareaEaboveC.prop('checked', false);
+    shadeareaEaboveC = false;
+    $shadeareaCbelowE.prop('checked', false);
+    shadeareaCbelowE = false;
+
 
     //#region TESTING -------------------------------------------------------------------
 
@@ -506,7 +530,9 @@ $(function() {
 
   function drawCohensd() {
     svgP.selectAll('.cohensd').remove();
-    svgP.append('text').text('d = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black');
+    //svgP.append('text').text('\u03b4 = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
+    svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
+    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 +8)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
   }
 
   function updatedslider() {
@@ -523,7 +549,35 @@ $(function() {
     drawExperimentalPDF();
     calcCohensd();
     drawCohensd();
+    if (!dsliderinuse) updatedslider();
+    dsliderinuse = false;
+
+    $xbarexpval.text(xbarexperimental.toFixed(1));
+    $sdexpval.text(sdexperimental.toFixed(1));
   }
+
+  /*--------------------------------------------Display areas------------------------------------------*/
+
+  $shadeareaEaboveC.on('change', function() {
+    shadeareaEaboveC = $shadeareaEaboveC.is(':checked');
+    if (shadeareaEaboveC) {
+
+    }
+    else {
+
+    }
+
+  })
+
+  $shadeareaCbelowE.on('change', function() {
+   shadeareaCbelowE = $shadeareaCbelowE.is(':checked');
+   if (shadeareaCbelowE) {
+
+   }
+   else {
+
+   }
+  })  
 
   /*---------------------------------------------Drag experimental curve------------------------------------*/
 
@@ -554,12 +608,15 @@ $(function() {
 
         xbarexperimental = (relX - xb(left)) * wr/wp + left;
 
-        if (xbarexperimental < left) xbarexperimental = left;
+        if (xbarexperimental < xbarcontrol) xbarexperimental = xbarcontrol;
+        //if (xbarexperimental < left) xbarexperimental = left;
         if (xbarexperimental > right) xbarexperimental = right;
 
+        redrawDisplay();
         updatedslider();
         updatexbarexperimental();
         $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+
       }
       if (isDragsd) {
         let parentOffset = $(this).parent().offset();
@@ -576,6 +633,9 @@ $(function() {
         updatedslider();
         updatesdexperimental();
         $sdexperimentalval.val(sdexperimental.toFixed(1));
+        calcCohensd();
+        drawCohensd();
+
       }
       e.preventDefault();
       e.stopPropagation();
@@ -611,6 +671,7 @@ $(function() {
   function dnudgebackward() {
     cohensd -= 0.01;
     if (cohensd < 0) cohensd = 0;
+    dsliderinuse = true;
     setdSlider();
     redrawDisplay();
   }
@@ -632,7 +693,8 @@ $(function() {
 
   function dnudgeforward() {
     cohensd += 0.01;
-    if (cohensd > 2) cohensd = 2;
+    if (cohensd > 4) cohensd = 4;
+    dsliderinuse
     setdSlider();
     redrawDisplay();
   }
@@ -782,7 +844,18 @@ $(function() {
 
 
 /*-----------------------------------------xbar sd experimental sliders --------------------------------------*/
-  
+
+$showexperimentalsliderpanel.on('change', function() {
+  showexperimentalsliderpanel = $showexperimentalsliderpanel.is(':checked');
+  if (showexperimentalsliderpanel) {
+    $('#xbarsdexperimental').show();
+  }
+  else {
+    $('#xbarsdexperimental').hide();
+  }
+})
+
+
 //changes to the xbar control, sd control textboxes
 $xbarexperimentalval.on('change', function() {
   if ( isNaN($xbarexperimentalval.val()) ) {
