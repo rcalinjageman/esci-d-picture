@@ -11,12 +11,13 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 0.0.1   Initial version
 
 0.2.0   2020-08-17  Version 2 
+0.2.1   2020-08-17  Slight tweak to make areas of overlap meet up.
 
 
 */
 //#endregion 
 
-let version = '0.2.0';
+let version = '0.2.1';
 
 'use strict';
 $(function() {
@@ -513,7 +514,7 @@ $(function() {
     left = -3;
     right = 7;
 
-    for (let x = left; x <= right; x += 0.01) {
+    for (let x = left; x <= right; x += 0.005) {
       controlpdf.push({ x: x, y: jStat.normal.pdf(x, xbarcontrol, sdcontrol) })
     }
 
@@ -532,7 +533,7 @@ $(function() {
     left = -3;
     right = 7;
 
-    for (let x = left; x <= right; x += 0.01) {
+    for (let x = left; x <= right; x += 0.005) {
       experimentalpdf.push({ x: x, y: jStat.normal.pdf(x, xbarexperimental, sdexperimental) })
     }
 
@@ -753,15 +754,15 @@ $(function() {
       middle = (xbarcontrol + xbarexperimental) / 2;
       areaoverlap = d3.area()
       .x(function(d) { return xb(d.x) })
-      .y1(y(0))
-      .y0(function(d) { if (d.x > xbarcontrol - 5*sdcontrol && d.x < middle) return y(d.y); else return y(0); });
+      .y1(y(0))                                                                //just to make areas meet up
+      .y0(function(d) { if (d.x > xbarcontrol - 5*sdcontrol && d.x <= middle + 0.01) return y(d.y); else return y(0); });
 
       svgP.append('path').attr('class', 'areaoverlap').attr('d', areaoverlap(experimentalpdf)).attr('fill', 'orchid'); // 'rgba(221,160,221,0.5'); //plum
 
       areaoverlap = d3.area()
       .x(function(d) { return xb(d.x) })
       .y1(y(0))
-      .y0(function(d) { if (d.x > middle && d.x < xbarexperimental + 5*sdexperimental) return y(d.y); else return y(0); });
+      .y0(function(d) { if (d.x >= middle && d.x < xbarexperimental + 5*sdexperimental) return y(d.y); else return y(0); });
 
       svgP.append('path').attr('class', 'areaoverlap').attr('d', areaoverlap(controlpdf)).attr('fill', 'orchid'); // 'rgba(221,160,221,0.5');
 
