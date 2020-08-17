@@ -774,8 +774,8 @@ $(function() {
     svgP.selectAll('.areaCbelowEvalues').remove();
     svgP.selectAll('.areaoverlapvalues').remove();
 
-    svgP.append('rect').attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.1) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-    svgP.append('text').text( prighttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.1) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+    svgP.append('rect').attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.6) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+    svgP.append('text').text( prighttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.6) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
 
     //always display area values on graph
     svgP.append('rect').attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 2.0) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
