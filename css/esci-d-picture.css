@@ -10,6 +10,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 0.0.1   Initial version
 
+0.2.0   2020-08-17  Version 2 
 
 #endregion */
 
@@ -23,6 +24,10 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 .irs--big .irs-max {
   color: rgba(0, 0, 0, 0.0);
   background-color: rgba(0, 0, 0, 0.0);
+}
+
+.irs-grid-text {
+  font-size: 1.4rem;
 }
 
 /*---------------------------------icons-----------------------------------------------------------*/
@@ -230,11 +235,12 @@ margin-left: 0.5rem;
 
 } */
 
-/*----------------------Panel 3 Areas-------------------------------------------------------------------*/
+/*----------------------Panel 1 Areas-------------------------------------------------------------------*/
 
 #areas {
   border: 1px solid black;
-  background-color: #FFCC99;  
+  background-color: #FFCC99; 
+  padding-top: 0.5rem; 
   padding-bottom: 1rem;
   padding-left: 0.5rem;
 }
@@ -250,9 +256,25 @@ margin-left: 0.5rem;
 
 }
 
-/*----------------------Panel 4 -------------------------------------------------------------------*/
+/*----------------------Panel 2 Probability of Superiority-------------------------------------------------------------------*/
 
+#psuperioritypanel {
+  background-color:#CCFFCC;
+  border: 1px solid black;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
 
+/*----------------------Panel 3 -------------------------------------------------------------------*/
+
+#nrequiredpanel {
+  background-color:#E6E6FA;
+  border: 1px solid black;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
 
 /*----------------------------------display---------------------------------------------------------*/
 #rightpanel {
@@ -314,19 +336,19 @@ margin-left: 0.5rem;
 
 /*----------------------------------d slider--------------------------------------------------------------*/
 #cohensdtitle {
-  padding-left: 1rem;
+  padding-left: 0rem;
   padding-top: 3rem;
 }
 
 #sliderdisplayarea {
-  display: grid;
-  grid-template-columns: 8rem 2rem auto 2rem 15em;
+  position: relative;
   height:6.0rem;
 }
 
 .icons {
   margin-top: 2.6rem;
 }
+
 
 
 

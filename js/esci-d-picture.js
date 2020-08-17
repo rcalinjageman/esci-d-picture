@@ -10,11 +10,13 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 /*
 0.0.1   Initial version
 
+0.2.0   2020-08-17  Version 2 
+
 
 */
 //#endregion 
 
-let version = '0.0.1';
+let version = '0.2.0';
 
 'use strict';
 $(function() {
@@ -47,10 +49,10 @@ $(function() {
   let controlpdf              = [];                                           //the array holding the normal distribution
   let experimentalpdf         = [];
 
-  let xbarcontrol             = 100;
-  let xbarexperimental        = 107.5;
-  let sdcontrol               = 15;
-  let sdexperimental          = 15;       
+  let xbarcontrol             = 0;
+  let xbarexperimental        = 1;
+  let sdcontrol               = 1;
+  let sdexperimental          = 1;       
 
   let $xbarcontrolslider = $('#xbarcontrolslider');
   let $sdcontrolslider   = $('#sdcontrolslider');
@@ -97,6 +99,8 @@ $(function() {
   let shadeareaEaboveC = false;
   const $shadeareaCbelowE = $('#shadeareaCbelowE');
   let shadeareaCbelowE = false;
+  const $shadeareaoverlap = $('#shadeareaoverlap');
+  let shadeareaoverlap = false;
 
   let dsliderinuse = false;
 
@@ -111,8 +115,18 @@ $(function() {
 
   const $areaEaboveC = $('#areaEaboveC');
   const $areaCbelowE = $('#areaCbelowE');
+  const $areaoverlap = $('#areaoverlap');
 
   let displace;
+
+  let dslidertop;
+  let dsliderleft;
+  let dsliderwidth;
+
+  const $psuperiority = $('#psuperiority');
+  let psuperiority;
+  const $nrequired = $('#nrequired');
+  let nrequired;
 
 
   //api for getting width, height of element - only gets element, not entire DOM
@@ -153,7 +167,7 @@ $(function() {
     $('svg').remove();                 //remove the all svg elements from the DOM
 
     //axes
-    svgTopAxis    = d3.select('#topaxis').append('svg').attr('width', '100%').attr('height', '100%');
+    //svgTopAxis    = d3.select('#topaxis').append('svg').attr('width', '100%').attr('height', '100%');
     svgBottomAxis = d3.select('#bottomaxis').append('svg').attr('width', '100%').attr('height', '100%');
 
     //pdf display
@@ -161,13 +175,13 @@ $(function() {
 
     setupSliders();
 
-    $xbarcontrolval.val(xbarcontrol.toFixed(1));
-    $sdcontrolval.val(sdcontrol.toFixed(1));
-    $xbarexperimentalval.val(xbarexperimental.toFixed(1));
-    $sdexperimentalval.val(sdexperimental.toFixed(1));
+    // $xbarcontrolval.val(xbarcontrol.toFixed(1));
+    // $sdcontrolval.val(sdcontrol.toFixed(1));
+    // $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+    // $sdexperimentalval.val(sdexperimental.toFixed(1));
 
-    $xbarexpval.text(xbarexperimental.toFixed(1));
-    $sdexpval.text(sdexperimental.toFixed(1));
+    // $xbarexpval.text(xbarexperimental.toFixed(1));
+    // $sdexpval.text(sdexperimental.toFixed(1));
 
     calcCohensd();
     updatedslider();
@@ -179,97 +193,98 @@ $(function() {
   }
 
   function setupSliders() {
-    $('#xbarcontrolslider').ionRangeSlider({
-      skin: 'big',
-      type: 'single',
-      min: 0,
-      max: 200,
-      from: xbarcontrol,
-      step: 0.1,
-      grid: true,
-      grid_num: 4,
-      prettify: prettify1,
-      //on slider handles change
-      onChange: function (data) {
-        xbarcontrol = data.from;
-        $xbarcontrolval.val(xbarcontrol.toFixed(1));
-        redrawDisplay();
-      }
-    })
-    $xbarcontrolslider = $('#xbarcontrolslider').data("ionRangeSlider");
+    // $('#xbarcontrolslider').ionRangeSlider({
+    //   skin: 'big',
+    //   type: 'single',
+    //   min: 0,
+    //   max: 200,
+    //   from: xbarcontrol,
+    //   step: 0.1,
+    //   grid: true,
+    //   grid_num: 4,
+    //   prettify: prettify1,
+    //   //on slider handles change
+    //   onChange: function (data) {
+    //     xbarcontrol = data.from;
+    //     $xbarcontrolval.val(xbarcontrol.toFixed(1));
+    //     redrawDisplay();
+    //   }
+    // })
+    // $xbarcontrolslider = $('#xbarcontrolslider').data("ionRangeSlider");
 
-    $('#sdcontrolslider').ionRangeSlider({
-      skin: 'big',
-      type: 'single',
-      min: 0,
-      max: 50,
-      from: sdcontrol, 
-      step: 0.1,
-      grid: true,
-      grid_num: 5,
-      prettify: prettify1,
-      //on slider handles change
-      onChange: function (data) {
-        sdcontrol = data.from;
-        if (sdcontrol < 1) {
-          sdcontrol = 1;
-          $sdcontrolslider.update({ from: sdcontrol });
-        }
-        $sdcontrolval.val(sdcontrol.toFixed(1));
-        redrawDisplay();
-      }
-    })
-    $sdcontrolslider = $('#sdcontrolslider').data("ionRangeSlider");
+    // $('#sdcontrolslider').ionRangeSlider({
+    //   skin: 'big',
+    //   type: 'single',
+    //   min: 0,
+    //   max: 50,
+    //   from: sdcontrol, 
+    //   step: 0.1,
+    //   grid: true,
+    //   grid_num: 5,
+    //   prettify: prettify1,
+    //   //on slider handles change
+    //   onChange: function (data) {
+    //     sdcontrol = data.from;
+    //     if (sdcontrol < 1) {
+    //       sdcontrol = 1;
+    //       $sdcontrolslider.update({ from: sdcontrol });
+    //     }
+    //     $sdcontrolval.val(sdcontrol.toFixed(1));
+    //     redrawDisplay();
+    //   }
+    // })
+    // $sdcontrolslider = $('#sdcontrolslider').data("ionRangeSlider");
 
-    $('#xbarexperimentalslider').ionRangeSlider({
-      skin: 'big',
-      type: 'single',
-      min: 0,
-      max: 200,
-      from: xbarexperimental,
-      step: 0.1,
-      grid: true,
-      grid_num: 4,
-      prettify: prettify1,
-      //on slider handles change
-      onChange: function (data) {
-        xbarexperimental = data.from;
-        $xbarexperimentalval.val(xbarexperimental.toFixed(1));
-        redrawDisplay();
-      }
-    })
-    $xbarexperimentalslider = $('#xbarexperimentalslider').data("ionRangeSlider");
+    // $('#xbarexperimentalslider').ionRangeSlider({
+    //   skin: 'big',
+    //   type: 'single',
+    //   min: 0,
+    //   max: 200,
+    //   from: xbarexperimental,
+    //   step: 0.1,
+    //   grid: true,
+    //   grid_num: 4,
+    //   prettify: prettify1,
+    //   //on slider handles change
+    //   onChange: function (data) {
+    //     xbarexperimental = data.from;
+    //     $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+    //     redrawDisplay();
+    //   }
+    // })
+    // $xbarexperimentalslider = $('#xbarexperimentalslider').data("ionRangeSlider");
 
-    $('#sdexperimentalslider').ionRangeSlider({
-      skin: 'big',
-      type: 'single',
-      min: 0,
-      max: 50,
-      from: sdexperimental, 
-      step: 0.1,
-      grid: true,
-      grid_num: 5,
-      prettify: prettify1,
-      //on slider handles change
-      onChange: function (data) {
-        sdexperimental = data.from;
-        if (sdexperimental < 1) {
-          sdexperimental = 1;
-          $sdexperimentalslider.update({ from: sdexperimental });
-        }
-        $sdexperimentalval.val(sdexperimental.toFixed(1));
-        redrawDisplay();
-      }
-    })
-    $sdexperimentalslider = $('#sdexperimentalslider').data("ionRangeSlider");
+    // $('#sdexperimentalslider').ionRangeSlider({
+    //   skin: 'big',
+    //   type: 'single',
+    //   min: 0,
+    //   max: 50,
+    //   from: sdexperimental, 
+    //   step: 0.1,
+    //   grid: true,
+    //   grid_num: 5,
+    //   prettify: prettify1,
+    //   //on slider handles change
+    //   onChange: function (data) {
+    //     sdexperimental = data.from;
+    //     if (sdexperimental < 1) {
+    //       sdexperimental = 1;
+    //       $sdexperimentalslider.update({ from: sdexperimental });
+    //     }
+    //     $sdexperimentalval.val(sdexperimental.toFixed(1));
+    //     redrawDisplay();
+    //   }
+    // })
+    // $sdexperimentalslider = $('#sdexperimentalslider').data("ionRangeSlider");
 
 
     $('#dslider').ionRangeSlider({
       skin: 'big',
       grid: true,
+      grid_num: 5,
       type: 'single',
       min: 0,
-      max: 4,
+      max: 5,
       from: 0,
       step: 0.01,
       prettify: prettify2,
@@ -305,6 +320,36 @@ $(function() {
     width   = rwidth - margin.left - margin.right;  
     heightP = rheight - margin.top - margin.bottom;
 
+    dslidertop = 0;
+    dsliderleft = 0.3 * width + margin.left - 35;
+    dsliderwidth = 0.5 * width;
+    //position the d slider title
+    $('#cohensdtitle').css({
+      position:'absolute',
+      top: dslidertop,
+      left: dsliderleft-92
+    })
+    
+    //position the d slider
+    $('#dsliderdiv').css({
+      position:'absolute',
+      top: dslidertop,
+      left: dsliderleft,
+      zIndex:5000,
+      width: dsliderwidth
+    });
+    //position the nudege bars
+    $dnudgebackward.css({
+      position:'absolute',
+      top: dslidertop,
+      left: dsliderleft+dsliderwidth+15,
+    })
+    $dnudgeforward.css({
+      position:'absolute',
+      top: dslidertop,
+      left: dsliderleft+dsliderwidth+40,
+    })    
+
     clear();
   }
 
@@ -319,10 +364,10 @@ $(function() {
     //because this style matches the distributions style more than one after the other.
     svgP.selectAll('.pdflabels').remove();
 
-    svgP.append('line').attr('class', 'pdflabels').attr('x1', xb(40)).attr('y1', y(95)).attr('x2', xb(48)).attr('y2', y(95)).attr('stroke', 'blue').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Control').attr('class', 'pdflabels').attr('x', xb(50)).attr('y', y(94)).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
-    svgP.append('line').attr('class', 'pdflabels').attr('x1', xb(40)).attr('y1', y(92)).attr('x2', xb(48)).attr('y2', y(92)).attr('stroke', 'red').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Experimental').attr('class', 'pdflabels').attr('x', xb(50)).attr('y', y(91)).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
+    svgP.append('line').attr('class', 'pdflabels').attr('x1', 50).attr('y1', 30).attr('x2', 80).attr('y2', 30).attr('stroke', 'blue').attr('stroke-width', 4).attr('fill', 'none');
+    svgP.append('text').text('Control').attr('class', 'pdflabels').attr('x', 90).attr('y', 35).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
+    svgP.append('line').attr('class', 'pdflabels').attr('x1', 50).attr('y1', 50).attr('x2', 80).attr('y2',50).attr('stroke', 'red').attr('stroke-width', 4).attr('fill', 'none');
+    svgP.append('text').text('Experimental').attr('class', 'pdflabels').attr('x', 90).attr('y', 55).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
 
 
     drawControlPDF();
@@ -332,7 +377,11 @@ $(function() {
     shadeareaEaboveC = false;
     $shadeareaCbelowE.prop('checked', false);
     shadeareaCbelowE = false;
+    $shadeareaoverlap.prop('checked', false);
+    shadeareaoverlap = false;
 
+    drawAreaProbabilities();
+    displaystatistics();
 
     //#region TESTING -------------------------------------------------------------------
 
@@ -413,8 +462,11 @@ $(function() {
 
     width   = rwidth - margin.left - margin.right;  
     
-    left  = xbarcontrol-distWidth*sdcontrol;
-    right = xbarcontrol+distWidth*sdcontrol;
+    // left  = xbarcontrol-distWidth*sdcontrol;
+    // right = xbarcontrol+distWidth*sdcontrol;
+
+    left = -3;
+    right = 7;
 
     xb = d3.scaleLinear().domain([left, right]).range([margin.left-2, width+4]);
 
@@ -455,10 +507,13 @@ $(function() {
   function createControl() {
     controlpdf = [];
 
-    left  = xbarcontrol-distWidth*sdcontrol;
-    right = xbarcontrol+distWidth*sdcontrol;
+    // left  = xbarcontrol-distWidth*sdcontrol;
+    // right = xbarcontrol+distWidth*sdcontrol;
 
-    for (let x = left; x <= right; x += 0.1) {
+    left = -3;
+    right = 7;
+
+    for (let x = left; x <= right; x += 0.01) {
       controlpdf.push({ x: x, y: jStat.normal.pdf(x, xbarcontrol, sdcontrol) })
     }
 
@@ -471,10 +526,13 @@ $(function() {
   function createExperimental() {
     experimentalpdf = [];
 
-    left  = xbarcontrol-distWidth*sdcontrol;
-    right = xbarcontrol+distWidth*sdcontrol;
+    // left  = xbarcontrol-distWidth*sdcontrol;
+    // right = xbarcontrol+distWidth*sdcontrol;
 
-    for (let x = left; x <= right; x += 0.1) {
+    left = -3;
+    right = 7;
+
+    for (let x = left; x <= right; x += 0.01) {
       experimentalpdf.push({ x: x, y: jStat.normal.pdf(x, xbarexperimental, sdexperimental) })
     }
 
@@ -485,7 +543,7 @@ $(function() {
   }
 
   function scaleypdf(y) {
-    return y * 3000;
+    return y * 200;
   }
 
   function drawControlPDF() {
@@ -524,7 +582,7 @@ $(function() {
     svgP.append('line').attr('class', 'experimentalpdf draggable').attr('x1', xb(xbarexperimental)).attr('y1', y(0)).attr('x2', xb(xbarexperimental)).attr('y2', y(h + 5)).attr('stroke', 'red').attr('stroke-width', 2).attr('fill', 'none');
     
     //draw a circle for where SD is
-    svgP.append('circle').attr('class', 'experimentalpdf draggable').attr('cx', xb(xbarexperimental + sdexperimental)).attr('cy', y(1)).attr('r', 5).attr('stroke', 'red').attr('stroke-width',  1).attr('fill', 'none')
+    //svgP.append('circle').attr('class', 'experimentalpdf draggable').attr('cx', xb(xbarexperimental + sdexperimental)).attr('cy', y(1)).attr('r', 5).attr('stroke', 'red').attr('stroke-width',  1).attr('fill', 'none')
 
   }
 
@@ -541,8 +599,12 @@ $(function() {
   function drawCohensd() {
     svgP.selectAll('.cohensd').remove();
     //svgP.append('text').text('\u03b4 = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
-    svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
-    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 1)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
+    svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2) -35).attr('y', 82).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
+    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2)).attr('y', 82).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
+
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)-2).attr('y1', 100).attr('x2',xb(xbarcontrol) + 2).attr('y2', 90).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarexperimental) - 2).attr('y1', 100).attr('x2',xb(xbarexperimental) + 2).attr('y2', 90).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)).attr('y1', 95).attr('x2',xb(xbarexperimental)).attr('y2', 95).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
   }
 
   function updatedslider() {
@@ -566,6 +628,7 @@ $(function() {
     $sdexpval.text(sdexperimental.toFixed(1));
 
     drawAreaProbabilities();
+    displaystatistics();
   }
 
   /*--------------------------------------------Display areas------------------------------------------*/
@@ -574,10 +637,10 @@ $(function() {
     shadeareaEaboveC = $shadeareaEaboveC.is(':checked');
     if (shadeareaEaboveC) {
       drawAreaProbabilities();
+      displaystatistics();
     }
     else {
-      svgP.selectAll('.areaEaboveC').remove();
-      $areaEaboveC.text(0);
+      removeAreaShading();
     }
   })
 
@@ -585,17 +648,81 @@ $(function() {
     shadeareaCbelowE = $shadeareaCbelowE.is(':checked');
     if (shadeareaCbelowE) {
       drawAreaProbabilities();
+      displaystatistics();
     }
     else {
-      svgP.selectAll('.areaCbelowE').remove();
-      $areaCbelowE.text(0);
+      removeAreaShading();
     }
   })  
+
+  $shadeareaoverlap.on('change', function() {
+    shadeareaoverlap = $shadeareaoverlap.is(':checked');
+    if (shadeareaoverlap) {
+      drawAreaProbabilities();
+      displaystatistics();
+    }
+    else {
+      removeAreaShading();
+    }
+  })
+
+  function removeAreaShading() {
+    if (!shadeareaEaboveC && !shadeareaCbelowE && !shadeareaoverlap) {
+      svgP.selectAll('.areaEaboveC').remove();
+      svgP.selectAll('.areaCbelowE').remove();
+      svgP.selectAll('.areaoverlap').remove();
+    }
+    if (!shadeareaEaboveC && !shadeareaCbelowE && shadeareaoverlap) {
+      svgP.selectAll('.areaEaboveC').remove();
+      svgP.selectAll('.areaCbelowE').remove();
+      //svgP.selectAll('.areaoverlap').remove();
+    }
+    if (!shadeareaEaboveC && shadeareaCbelowE && !shadeareaoverlap) {
+      svgP.selectAll('.areaEaboveC').remove();
+      //svgP.selectAll('.areaCbelowE').remove();
+      svgP.selectAll('.areaoverlap').remove();
+    }
+    if (!shadeareaEaboveC && shadeareaCbelowE && shadeareaoverlap) {
+      svgP.selectAll('.areaEaboveC').remove();
+      //svgP.selectAll('.areaCbelowE').remove();
+      //svgP.selectAll('.areaoverlap').remove();
+    }
+    if (shadeareaEaboveC && !shadeareaCbelowE && !shadeareaoverlap) {
+      //svgP.selectAll('.areaEaboveC').remove();
+      svgP.selectAll('.areaCbelowE').remove();
+      svgP.selectAll('.areaoverlap').remove();
+    }
+    if (shadeareaEaboveC && !shadeareaCbelowE && shadeareaoverlap) {
+      //svgP.selectAll('.areaEaboveC').remove();
+      svgP.selectAll('.areaCbelowE').remove();
+      //svgP.selectAll('.areaoverlap').remove();      
+    }
+    if (shadeareaEaboveC && shadeareaCbelowE && !shadeareaoverlap) {
+      //svgP.selectAll('.areaEaboveC').remove();
+      //svgP.selectAll('.areaCbelowE').remove();
+      //svgP.selectAll('.areaoverlap').remove();
+    }
+    if (shadeareaEaboveC && shadeareaCbelowE && shadeareaoverlap) {
+      //do nothing
+    }
+  }
 
   function drawAreaProbabilities() {
     svgP.selectAll('.areaEaboveC').remove();
     svgP.selectAll('.areaCbelowE').remove();
-    svgP.selectAll('.areaBetween').remove();
+    svgP.selectAll('.areaoverlap').remove();
+
+    //calculate the area (probability)
+    prighttail = 1 - jStat.normal.cdf(xbarcontrol, xbarexperimental, sdexperimental); 
+    $areaEaboveC.text(prighttail.toFixed(4).toString().replace('0.', '.'));
+
+    plefttail = jStat.normal.cdf(xbarexperimental, xbarcontrol, sdcontrol); 
+    $areaCbelowE.text(plefttail.toFixed(4).toString().replace('0.', '.'));
+
+    middle = (xbarcontrol + xbarexperimental) / 2;
+    poverlap = 2 * (1 - jStat.normal.cdf(cohensd/2, 0, 1)); 
+    $areaoverlap.text(poverlap.toFixed(4).toString().replace('0.', '.'));
+
 
     if (shadeareaEaboveC) {
       //fill the areas
@@ -607,12 +734,8 @@ $(function() {
       svgP.append('path').attr('class', 'areaEaboveC').attr('d', arearighttail(experimentalpdf)).attr('fill', 'mistyrose');
       drawControlPDF();
       drawExperimentalPDF();
-
-      //calculate the area (probability)
-      prighttail = 1 - jStat.normal.cdf(xbarcontrol, xbarexperimental, sdexperimental); 
-      $areaEaboveC.text((prighttail * 100).toFixed(1));
-
     }
+
     if (shadeareaCbelowE) {
       //fill the areas
       arealefttail = d3.area()
@@ -623,75 +746,60 @@ $(function() {
       svgP.append('path').attr('class', 'areaCbelowE').attr('d', arealefttail(controlpdf)).attr('fill', 'lightskyblue');
       drawControlPDF();
       drawExperimentalPDF();
-
-      //calculate the area (probability)
-      plefttail = jStat.normal.cdf(xbarexperimental, xbarcontrol, sdcontrol); 
-      $areaCbelowE.text((plefttail * 100).toFixed(1));
     }
 
-    //shade middle area
-    if (shadeareaEaboveC && shadeareaCbelowE) {
+    //shade overlap area
+    if (shadeareaoverlap || (shadeareaEaboveC && shadeareaCbelowE)) {
       middle = (xbarcontrol + xbarexperimental) / 2;
-      areamiddle = d3.area()
+      areaoverlap = d3.area()
       .x(function(d) { return xb(d.x) })
       .y1(y(0))
-      .y0(function(d) { if (d.x > xbarcontrol && d.x < middle) return y(d.y); else return y(0); });
+      .y0(function(d) { if (d.x > xbarcontrol - 5*sdcontrol && d.x < middle) return y(d.y); else return y(0); });
 
-      svgP.append('path').attr('class', 'areaMiddle').attr('d', areamiddle(experimentalpdf)).attr('fill', 'plum');
+      svgP.append('path').attr('class', 'areaoverlap').attr('d', areaoverlap(experimentalpdf)).attr('fill', 'orchid'); // 'rgba(221,160,221,0.5'); //plum
 
-      areamiddle = d3.area()
+      areaoverlap = d3.area()
       .x(function(d) { return xb(d.x) })
       .y1(y(0))
-      .y0(function(d) { if (d.x > middle && d.x < xbarexperimental) return y(d.y); else return y(0); });
+      .y0(function(d) { if (d.x > middle && d.x < xbarexperimental + 5*sdexperimental) return y(d.y); else return y(0); });
 
-      svgP.append('path').attr('class', 'areaMiddle').attr('d', areamiddle(controlpdf)).attr('fill', 'plum');
-
+      svgP.append('path').attr('class', 'areaoverlap').attr('d', areaoverlap(controlpdf)).attr('fill', 'orchid'); // 'rgba(221,160,221,0.5');
 
       drawControlPDF();
       drawExperimentalPDF();
-
     }
 
     //now draw probabilities on top of areas
-    if (shadeareaEaboveC) {
-      //now display on graph
-      //if boxes might collide ...
-      displace = Math.abs(xbarcontrol - xbarexperimental);
-      if (displace < 6 ) {
-        svgP.append('rect').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - displace + 10 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-        svgP.append('text').text((prighttail * 100).toFixed(1) + '%').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - displace + 10 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
-      }
-      else {
-        svgP.append('rect').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - 22 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-        svgP.append('text').text((prighttail * 100).toFixed(1) + '%').attr('class', 'areaEaboveC').attr('x', xb(xbarexperimental) - 15 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
-      }
-    }
-    if (shadeareaCbelowE) {
-      //now display on graph
-      //if boxes might collide ...
-      displace = Math.abs(xbarcontrol - xbarexperimental);
-      if (displace < 6 ) {
-        svgP.append('rect').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - displace - 65 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-        svgP.append('text').text((plefttail * 100).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - displace - 65 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
-      }
-      else {
-        svgP.append('rect').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - 28 ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-        svgP.append('text').text((plefttail * 100).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(xbarcontrol) - 20 ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'blue');
-      }
-    }
-    if (shadeareaEaboveC && shadeareaCbelowE) {
-      //draw overlap area
-      middle = (xbarcontrol + xbarexperimental) / 2;
-      middlearea = jStat.normal.cdf(xbarexperimental, xbarcontrol, sdcontrol) - jStat.normal.cdf(xbarcontrol, xbarcontrol, sdcontrol); 
-      svgP.append('rect').attr('class', 'areaBetween').attr('x', xb(middle) - 27 ).attr('y', y(18)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-      svgP.append('text').text((Math.abs((middlearea)*100)).toFixed(1) + '%').attr('class', 'areaCbelowE').attr('x', xb(middle) - 23 ).attr('y', y(15) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'black');
+    svgP.selectAll('.areaEaboveCvalues').remove();
+    svgP.selectAll('.areaCbelowEvalues').remove();
+    svgP.selectAll('.areaoverlapvalues').remove();
 
-    }
+    svgP.append('rect').attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.1) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+    svgP.append('text').text( prighttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.1) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+
+    //always display area values on graph
+    svgP.append('rect').attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 2.0) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+    svgP.append('text').text( plefttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 2.0) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'blue');
+
+    //draw overlap probability
+    svgP.append('rect').attr('class', 'areaoverlapvalues').attr('x', xb(middle) - 27 ).attr('y', y(18)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+    svgP.append('text').text( poverlap.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(middle) - 23 ).attr('y', y(15) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'black');
+
+  }
+
+  function displaystatistics() {
+    psuperiority = jStat.normal.cdf(cohensd, 0, Math.sqrt(2));
+    $psuperiority.text(psuperiority.toFixed(4).toString().replace('0.', '.'));
+
+    nrequired = '-';
+    if (cohensd !== 0) nrequired = Math.ceil(30.73 / (cohensd * cohensd));
+    if (nrequired > 10000) nrequired = '> 10,000';
+    $nrequired.text(nrequired);
   }
 
   /*---------------------------------------------Drag experimental curve------------------------------------*/
 
-
+  //not used, but leave in for now
   $pdfdisplay
     .mousedown(function(e) {
       //only if mouse on experimental cursor line
@@ -710,45 +818,43 @@ $(function() {
       }
     })
     .mousemove(function(e) {
-      if (isDragxbar) {
-        let parentOffset = $(this).parent().offset();
-        let relX = e.pageX - parentOffset.left;
-        let wr = right - left;
-        let wp = xb(right) - xb(left);
-
-        xbarexperimental = (relX - xb(left)) * wr/wp + left;
-
-        if (xbarexperimental < xbarcontrol) xbarexperimental = xbarcontrol;
-        //if (xbarexperimental < left) xbarexperimental = left;
-        if (xbarexperimental > right) xbarexperimental = right;
-
-        redrawDisplay();
-        updatedslider();
-        updatexbarexperimental();
-        $xbarexperimentalval.val(xbarexperimental.toFixed(1));
-
-      }
-      if (isDragsd) {
-        let parentOffset = $(this).parent().offset();
-        let relX = e.pageX - parentOffset.left;
-        let wr = right - left;
-        let wp = xb(right) - xb(left);
-
-        //xbarexperimental = (relX - xb(left)) * wr/wp + left;
-        sdexperimental = (relX - xb(left)) * wr/wp + left - xbarexperimental;
-
-        if (sdexperimental < 1) sdexperimental = 1;
-        //if (xbarexperimental > right) xbarexperimental = right;
-
-        updatedslider();
-        updatesdexperimental();
-        $sdexperimentalval.val(sdexperimental.toFixed(1));
-        calcCohensd();
-        drawCohensd();
-
-      }
       e.preventDefault();
       e.stopPropagation();
+      if (isDragxbar) {
+        // let parentOffset = $(this).parent().offset();
+        // let relX = e.pageX - parentOffset.left;
+        // let wr = right - left;
+        // let wp = xb(right) - xb(left);
+
+        // xbarexperimental = (relX - xb(left)) * wr/wp + left;
+
+        // //if (xbarexperimental < xbarcontrol) xbarexperimental = xbarcontrol;
+        // if (xbarexperimental < 0) xbarexperimental = 0;
+        // if (xbarexperimental > right) xbarexperimental = right;
+
+        // redrawDisplay();
+        // updatedslider();
+        // updatexbarexperimental();
+        // $xbarexperimentalval.val(xbarexperimental.toFixed(1));
+      }
+      if (isDragsd) {
+        // let parentOffset = $(this).parent().offset();
+        // let relX = e.pageX - parentOffset.left;
+        // let wr = right - left;
+        // let wp = xb(right) - xb(left);
+
+        // //xbarexperimental = (relX - xb(left)) * wr/wp + left;
+        // sdexperimental = (relX - xb(left)) * wr/wp + left - xbarexperimental;
+
+        // if (sdexperimental < 1) sdexperimental = 1;
+        // //if (xbarexperimental > right) xbarexperimental = right;
+
+        // updatedslider();
+        // updatesdexperimental();
+        // $sdexperimentalval.val(sdexperimental.toFixed(1));
+        // calcCohensd();
+        // drawCohensd();
+      }
     })
     .mouseup(function(e) {
       isDragxbar = false;
@@ -803,7 +909,7 @@ $(function() {
 
   function dnudgeforward() {
     cohensd += 0.01;
-    if (cohensd > 4) cohensd = 4;
+    if (cohensd > 5) cohensd = 5;
     dsliderinuse
     setdSlider();
     redrawDisplay();

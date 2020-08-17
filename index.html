@@ -9,6 +9,8 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 <!--
 0.0.1   Initial version
 
+0.2.0   2020-08-17  Version 2
+
 
 -->
 <!--endregion -->
@@ -71,9 +73,9 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
         
 <!-------------------------------------Panels------------------------------------->        
         <div id=panels>
-<!-------------------------------------1 xbar sd control----------------------------------------->                
+<!-------------------------------------0 xbar sd control----------------------------------------->                
 
-          <div id=xbarsdcontrol>
+          <!-- <div id=xbarsdcontrol>
             <span class=xbarsdcontroltip data-tooltip><strong><span class=red>1 </span>Set control <em>X</em> and <em>s</em></span></strong>
  
 
@@ -95,23 +97,23 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
                 <input id=sdcontrolval type=text>
               </div>
             </div> 
-          </div>
+          </div> -->
 
-<!-------------------------------------2a xbar sd experimental display only----------------------------------------->                
+<!-------------------------------------0 xbar sd experimental display only----------------------------------------->                
 
-          <div id=xbassdexperimentaldisplayonly>
+          <!-- <div id=xbassdexperimentaldisplayonly>
             <span class=xbarsdexperimentaldisplayonlytip data-tooltip><strong><span class=red>2 </span>Set experimental <em>X</em> and <em>s</em></strong></span>
             <div id=xbarsdexpdiv>
               <div><em>X<sub>e </sub>: </em><span id=xbarexpval>0</span></div>
               <div><em>s<sub>e </sub>: </em><span id=sdexpval>0</span></div>
               <div id=showexppanel>Show experimental slider panel <input id=showexperimentalsliderpanel type=checkbox></div>
             </div>
-          </div>
+          </div> -->
 
 
-<!-------------------------------------2b xbar sd experimental----------------------------------------->                
+<!-------------------------------------0 xbar sd experimental----------------------------------------->                
 
-          <div id=xbarsdexperimental>
+          <!-- <div id=xbarsdexperimental>
             <span class=xbarsdexperimentaltip data-tooltip><strong><span class=red>2 </span>Experimental <em>X</em> and <em>s</em></span></strong>
  
 
@@ -133,24 +135,40 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
                 <input id=sdexperimentalval type=text>
               </div>
             </div> 
-          </div>
+          </div> -->
 
 
-<!-------------------------------------3 Areas ----------------------------------------->                
+<!-------------------------------------1 Areas ----------------------------------------->                
 
           <div id=areas>
-            <span class=areastip data-tooltip><span class=red>3 </span><strong>Areas</strong></span>
+            <span class=areastip data-tooltip><span class=red>1 </span><strong>Areas</strong></span>
             <div id=shadelabel>Shade?</div>
             <div id=areassection>
               <div>Area of E above mean of C</div>
-              <div id=areaEaboveC>0</div><span>%</span>
+              <div id=areaEaboveC>.00</div><span></span>
               <input id=shadeareaEaboveC type=checkbox>
 
               <div>Area of C below mean of E</div>
-              <div id=areaCbelowE>0</div><span>%</span>
+              <div id=areaCbelowE>.00</div><span></span>
               <input id=shadeareaCbelowE type=checkbox>
 
+              <div>Overlap</div>
+              <div id=areaoverlap>.00</div><span></span>
+              <input id=shadeareaoverlap type=checkbox>
+
             </div>
+          </div>
+
+<!-------------------------------------2 Probability of Superiority ----------------------------------------->                
+
+          <div id=psuperioritypanel>
+            <div><strong><span class=red>2</span> Probability of Superiority &nbsp; </strong><span id=psuperiority>0.0</span></div>
+          </div>
+
+<!-------------------------------------3 N required for sufficient precision ----------------------------------------->                
+
+          <div id=nrequiredpanel>
+            <div><strong><span class=red>3</span> N required for sufficient precision &nbsp; </strong><span id=nrequired>0</span></div>
           </div>
 
 <!--------------------------------end of panels------------------------------------------>
@@ -176,12 +194,11 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
         
         <div id=sliderdisplayarea>
           <div id=cohensdtitle>Cohen's <em>d</em></div>
-          <div></div>
-          <input id=dslider type=text/>
+          <div id=dsliderdiv><input id=dslider type=text/></div>
+          
           <div><img id=dnudgebackward class="icons slidericons" src=./images/left.png alt='nudge backwards'></div>
           <div><img id=dnudgeforward class="icons slidericons" src=./images/right.png alt='nudge forward'></div>
         </div>
-
       </div>
 
     </div>
