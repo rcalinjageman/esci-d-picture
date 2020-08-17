@@ -14,6 +14,9 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 #endregion */
 
+
+
+
 /*------------------------------override on ion slider-----------------------------------*/
 /*blank out end labels*/
 .irs--big .irs-min {
@@ -53,6 +56,12 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 /*----------------------------------Panels-----------------------------------------------------*/
 
+/*overrides*/
+
+#areas, #psuperioritypanel, #nrequiredpanel {
+  font-size: 1.5rem;
+}
+
 /* #panels {
 }  */
 
@@ -73,7 +82,130 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
   background-color: darkgrey;
 }
 
-/*----------------Panel 1 xbar sd control-------------------------------------------------------------------------*/
+/*----------------------Panel 1 Areas-------------------------------------------------------------------*/
+
+#areas {
+  border: 1px solid black;
+  background-color: #FFCC99; 
+  padding-top: 0.5rem; 
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+#shadelabel {
+  margin-top: 1rem;
+  margin-left: 30rem;
+}
+
+#areassection {
+  display: grid;
+  grid-template-columns: 24rem 4rem 3rem auto;
+
+}
+
+/*----------------------Panel 2 Probability of Superiority-------------------------------------------------------------------*/
+
+#psuperioritypanel {
+  background-color:#CCFFCC;
+  border: 1px solid black;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+/*----------------------Panel 3 -------------------------------------------------------------------*/
+
+#nrequiredpanel {
+  background-color:#E6E6FA;
+  border: 1px solid black;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+
+
+
+/*----------------------------------display---------------------------------------------------------*/
+#rightpanel {
+  border: 1px solid grey;
+  display: grid;
+  grid-template-rows: 0.1rem auto 5rem 2rem 15rem;  /*no topaxis...at moment*/
+}
+
+/*---------------------------------top axis---------------------------------------------------------*/
+
+#topaxis {
+  background-color: white;
+  font-size: 1.0rem;
+  /* border: 1px solid green;  */
+}
+
+.topaxistext {
+  font-size: 2.0rem;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.topaxisunits {
+  font-size: 1.8rem;
+  font-weight: bold; 
+}
+
+/*---------------------------------bottom axis---------------------------------------------------------*/
+
+#bottomaxis {
+  background-color: white;
+  font-size: 1.0rem;
+  /* border: 1px solid green; */
+}
+
+.bottomaxistext {
+  font-size: 2.0rem;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/*----------------------------------pdf-------------------------------------------------------------*/
+
+#pdfdisplay {
+  /* border: 1px solid red;  */
+  background-color: white;
+}
+
+/*attached to the control curve and the cursor */
+.static {
+  cursor: not-allowed;
+}
+
+/*attached to the experimental curve and the cursor */
+.draggable {
+  cursor: move;
+}
+
+
+/*----------------------------------d slider--------------------------------------------------------------*/
+
+#cohensdtitle {
+  padding-left: 0rem;
+  padding-top: 3rem;
+}
+
+#sliderdisplayarea {
+  position: relative;
+  height:6.0rem;
+}
+
+.icons {
+  margin-top: 2.6rem;
+}
+
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+
+/*----------------NOT USED AT PRESENT------------------------------------------------------------------*/
+/*----------------Panel 1 xbar sd control--------------------------------------------------------------*/
 
 #xbarsdcontroldiv {
   padding-top: 1rem;
@@ -234,127 +366,3 @@ margin-left: 0.5rem;
 /* #showexperimentalsliderpanel {
 
 } */
-
-/*----------------------Panel 1 Areas-------------------------------------------------------------------*/
-
-#areas {
-  border: 1px solid black;
-  background-color: #FFCC99; 
-  padding-top: 0.5rem; 
-  padding-bottom: 1rem;
-  padding-left: 0.5rem;
-}
-
-#shadelabel {
-  margin-top: 1rem;
-  margin-left: 27rem;
-}
-
-#areassection {
-  display: grid;
-  grid-template-columns: 20rem 4rem 3rem auto;
-
-}
-
-/*----------------------Panel 2 Probability of Superiority-------------------------------------------------------------------*/
-
-#psuperioritypanel {
-  background-color:#CCFFCC;
-  border: 1px solid black;
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
-  padding-left: 0.5rem;
-}
-
-/*----------------------Panel 3 -------------------------------------------------------------------*/
-
-#nrequiredpanel {
-  background-color:#E6E6FA;
-  border: 1px solid black;
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
-  padding-left: 0.5rem;
-}
-
-/*----------------------------------display---------------------------------------------------------*/
-#rightpanel {
-  border: 1px solid grey;
-  display: grid;
-  grid-template-rows: 0.1rem auto 5rem 2rem 15rem;  /*no topaxis...at moment*/
-}
-
-/*---------------------------------top axis---------------------------------------------------------*/
-
-#topaxis {
-  background-color: white;
-  font-size: 1.0rem;
-  /* border: 1px solid green;  */
-}
-
-.topaxistext {
-  font-size: 2.0rem;
-  font-weight: bold;
-  font-style: italic;
-}
-
-.topaxisunits {
-  font-size: 1.8rem;
-  font-weight: bold; 
-}
-
-/*---------------------------------bottom axis---------------------------------------------------------*/
-
-#bottomaxis {
-  background-color: white;
-  font-size: 1.0rem;
-  /* border: 1px solid green; */
-}
-
-.bottomaxistext {
-  font-size: 2.0rem;
-  font-weight: bold;
-  font-style: italic;
-}
-
-/*----------------------------------pdf-------------------------------------------------------------*/
-
-#pdfdisplay {
-  /* border: 1px solid red;  */
-  background-color: white;
-}
-
-/*attached to the control curve and the cursor */
-.static {
-  cursor: not-allowed;
-}
-
-/*attached to the experimental curve and the cursor */
-.draggable {
-  cursor: move;
-}
-
-
-/*----------------------------------d slider--------------------------------------------------------------*/
-#cohensdtitle {
-  padding-left: 0rem;
-  padding-top: 3rem;
-}
-
-#sliderdisplayarea {
-  position: relative;
-  height:6.0rem;
-}
-
-.icons {
-  margin-top: 2.6rem;
-}
-
-
-
-
-/*----------------------------------------------------------------------------------------------------*/
-
-
-
-/*-----------------------------------------------------------------------------------------------------*/
-
