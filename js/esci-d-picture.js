@@ -13,11 +13,12 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 0.2.0   2020-08-17  Version 2 
 0.2.1   2020-08-17  Slight tweak to make areas of overlap meet up.
 0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
+0.2.3   2020-08-19  #4 Tweaks to overlap positions and viewability, including d line and value
 
 */
 //#endregion 
 
-let version = '0.2.2';
+let version = '0.2.3';
 
 'use strict';
 $(function() {
@@ -183,6 +184,13 @@ $(function() {
 
     // $xbarexpval.text(xbarexperimental.toFixed(1));
     // $sdexpval.text(sdexperimental.toFixed(1));
+
+    $shadeareaEaboveC.prop('checked', false);
+    shadeareaEaboveC = false;
+    $shadeareaCbelowE.prop('checked', false);
+    shadeareaCbelowE = false;
+    $shadeareaoverlap.prop('checked', false);
+    shadeareaoverlap = false;
 
     calcCohensd();
     updatedslider();
@@ -373,13 +381,6 @@ $(function() {
 
     drawControlPDF();
     drawExperimentalPDF();
-
-    $shadeareaEaboveC.prop('checked', false);
-    shadeareaEaboveC = false;
-    $shadeareaCbelowE.prop('checked', false);
-    shadeareaCbelowE = false;
-    $shadeareaoverlap.prop('checked', false);
-    shadeareaoverlap = false;
 
     drawAreaProbabilities();
     displaystatistics();
@@ -600,12 +601,12 @@ $(function() {
   function drawCohensd() {
     svgP.selectAll('.cohensd').remove();
     //svgP.append('text').text('\u03b4 = ' + cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2 - 5)).attr('y', 100).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
-    svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2) -35).attr('y', 82).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
-    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2)).attr('y', 82).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
+    svgP.append('text').text('d = ').attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2) -35).attr('y', y(h + 15)).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold').style('font-style', 'italic');
+    svgP.append('text').text(cohensd.toFixed(2)).attr('class', 'cohensd').attr('x', xb( (xbarcontrol+xbarexperimental)/2)).attr('y', y(h + 15)).attr('text-anchor', 'start').attr('fill', 'black').style('font-size', '1.7rem').style('font-weight', 'bold');
 
-    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)-2).attr('y1', 100).attr('x2',xb(xbarcontrol) + 2).attr('y2', 90).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
-    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarexperimental) - 2).attr('y1', 100).attr('x2',xb(xbarexperimental) + 2).attr('y2', 90).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
-    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)).attr('y1', 95).attr('x2',xb(xbarexperimental)).attr('y2', 95).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)-2).attr('y1', y(h+10)+8).attr('x2',xb(xbarcontrol) + 2).attr('y2', y(h+10)-8).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarexperimental) - 2).attr('y1', y(h+10)+8).attr('x2',xb(xbarexperimental) + 2).attr('y2', y(h+10)-8).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
+    svgP.append('line').attr('class', 'cohensd').attr('x1', xb(xbarcontrol)).attr('y1', y(h + 10)).attr('x2',xb(xbarexperimental)).attr('y2', y(h + 10)).attr('stroke', 'black').attr('stroke-width', 1).attr('fill', 'none');
   }
 
   function updatedslider() {
@@ -637,76 +638,32 @@ $(function() {
   $shadeareaEaboveC.on('change', function() {
     shadeareaEaboveC = $shadeareaEaboveC.is(':checked');
     if (shadeareaEaboveC) {
-      drawAreaProbabilities();
       displaystatistics();
     }
     else {
-      removeAreaShading();
     }
+    drawAreaProbabilities();
   })
 
   $shadeareaCbelowE.on('change', function() {
     shadeareaCbelowE = $shadeareaCbelowE.is(':checked');
     if (shadeareaCbelowE) {
-      drawAreaProbabilities();
       displaystatistics();
     }
     else {
-      removeAreaShading();
     }
+    drawAreaProbabilities();
   })  
 
   $shadeareaoverlap.on('change', function() {
     shadeareaoverlap = $shadeareaoverlap.is(':checked');
     if (shadeareaoverlap) {
-      drawAreaProbabilities();
       displaystatistics();
     }
     else {
-      removeAreaShading();
     }
+    drawAreaProbabilities();
   })
-
-  function removeAreaShading() {
-    if (!shadeareaEaboveC && !shadeareaCbelowE && !shadeareaoverlap) {
-      svgP.selectAll('.areaEaboveC').remove();
-      svgP.selectAll('.areaCbelowE').remove();
-      svgP.selectAll('.areaoverlap').remove();
-    }
-    if (!shadeareaEaboveC && !shadeareaCbelowE && shadeareaoverlap) {
-      svgP.selectAll('.areaEaboveC').remove();
-      svgP.selectAll('.areaCbelowE').remove();
-      //svgP.selectAll('.areaoverlap').remove();
-    }
-    if (!shadeareaEaboveC && shadeareaCbelowE && !shadeareaoverlap) {
-      svgP.selectAll('.areaEaboveC').remove();
-      //svgP.selectAll('.areaCbelowE').remove();
-      svgP.selectAll('.areaoverlap').remove();
-    }
-    if (!shadeareaEaboveC && shadeareaCbelowE && shadeareaoverlap) {
-      svgP.selectAll('.areaEaboveC').remove();
-      //svgP.selectAll('.areaCbelowE').remove();
-      //svgP.selectAll('.areaoverlap').remove();
-    }
-    if (shadeareaEaboveC && !shadeareaCbelowE && !shadeareaoverlap) {
-      //svgP.selectAll('.areaEaboveC').remove();
-      svgP.selectAll('.areaCbelowE').remove();
-      svgP.selectAll('.areaoverlap').remove();
-    }
-    if (shadeareaEaboveC && !shadeareaCbelowE && shadeareaoverlap) {
-      //svgP.selectAll('.areaEaboveC').remove();
-      svgP.selectAll('.areaCbelowE').remove();
-      //svgP.selectAll('.areaoverlap').remove();      
-    }
-    if (shadeareaEaboveC && shadeareaCbelowE && !shadeareaoverlap) {
-      //svgP.selectAll('.areaEaboveC').remove();
-      //svgP.selectAll('.areaCbelowE').remove();
-      //svgP.selectAll('.areaoverlap').remove();
-    }
-    if (shadeareaEaboveC && shadeareaCbelowE && shadeareaoverlap) {
-      //do nothing
-    }
-  }
 
   function drawAreaProbabilities() {
     svgP.selectAll('.areaEaboveC').remove();
@@ -775,16 +732,21 @@ $(function() {
     svgP.selectAll('.areaCbelowEvalues').remove();
     svgP.selectAll('.areaoverlapvalues').remove();
 
-    svgP.append('rect').attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.6) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-    svgP.append('text').text( prighttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.6) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+    if (shadeareaEaboveC) {
+      svgP.append('rect').attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.3) ).attr('y', heightP-67).attr('width', 50).attr('height', 22).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+      svgP.append('text').text( prighttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaEaboveCvalues').attr('x', xb(xbarexperimental + 1.3) ).attr('y', heightP-50 ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'red');
+    }
 
-    //always display area values on graph
-    svgP.append('rect').attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 2.0) ).attr('y', y(8)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-    svgP.append('text').text( plefttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 2.0) ).attr('y', y(5) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'blue');
+    if (shadeareaCbelowE) {
+      svgP.append('rect').attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 1.85) ).attr('y', heightP-67).attr('width', 50).attr('height', 22).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+      svgP.append('text').text( plefttail.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(xbarcontrol - 1.85) ).attr('y', heightP-50 ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'blue');
+    }
 
-    //draw overlap probability
-    svgP.append('rect').attr('class', 'areaoverlapvalues').attr('x', xb(middle) - 27 ).attr('y', y(18)).attr('width', 58).attr('height', 27).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
-    svgP.append('text').text( poverlap.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(middle) - 23 ).attr('y', y(15) ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'black');
+    // if (shadeareaoverlap || (shadeareaEaboveC && shadeareaCbelowE) ) {
+    if (shadeareaoverlap) {
+      svgP.append('rect').attr('class', 'areaoverlapvalues').attr('x', xb(middle) - 25 ).attr('y', heightP-107).attr('width', 56).attr('height', 22).attr('fill', 'white').attr('stroke', 'none').attr('stroke-width', 1);
+      svgP.append('text').text( poverlap.toFixed(4).toString().replace('0.', '.') ).attr('class', 'areaCbelowEvalues').attr('x', xb(middle) - 21 ).attr('y', heightP-90 ).attr('text-anchor', 'start').style("font", "1.7rem sans-serif").attr('fill', 'black');
+    }
 
   }
 
