@@ -15,10 +15,11 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
 0.2.3   2020-08-19  #4 Tweaks to overlap positions and viewability, including d line and value
 0.2.4   2020-08-19  #5 bottom axis label now d
+0.2.5   2020-08-19  #6 slider - tweak title and size
 */
 //#endregion 
 
-let version = '0.2.4';
+let version = '0.2.5';
 
 'use strict';
 $(function() {
@@ -373,10 +374,10 @@ $(function() {
     //because this style matches the distributions style more than one after the other.
     svgP.selectAll('.pdflabels').remove();
 
-    svgP.append('line').attr('class', 'pdflabels').attr('x1', 50).attr('y1', 30).attr('x2', 80).attr('y2', 30).attr('stroke', 'blue').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Control').attr('class', 'pdflabels').attr('x', 90).attr('y', 35).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
-    svgP.append('line').attr('class', 'pdflabels').attr('x1', 50).attr('y1', 50).attr('x2', 80).attr('y2',50).attr('stroke', 'red').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Experimental').attr('class', 'pdflabels').attr('x', 90).attr('y', 55).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
+    svgP.append('line').attr('class', 'pdflabels').attr('x1', 30).attr('y1', 30).attr('x2', 60).attr('y2', 30).attr('stroke', 'blue').attr('stroke-width', 4).attr('fill', 'none');
+    svgP.append('text').text('Control').attr('class', 'pdflabels').attr('x', 70).attr('y', 35).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
+    svgP.append('line').attr('class', 'pdflabels').attr('x1', 30).attr('y1', 50).attr('x2', 60).attr('y2',50).attr('stroke', 'red').attr('stroke-width', 4).attr('fill', 'none');
+    svgP.append('text').text('Experimental').attr('class', 'pdflabels').attr('x', 70).attr('y', 55).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
 
 
     drawControlPDF();
