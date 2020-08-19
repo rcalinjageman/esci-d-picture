@@ -14,11 +14,11 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 0.2.1   2020-08-17  Slight tweak to make areas of overlap meet up.
 0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
 0.2.3   2020-08-19  #4 Tweaks to overlap positions and viewability, including d line and value
-
+0.2.4   2020-08-19  #5 bottom axis label now d
 */
 //#endregion 
 
-let version = '0.2.3';
+let version = '0.2.4';
 
 'use strict';
 $(function() {
@@ -479,7 +479,7 @@ $(function() {
       svgBottomAxis.append('g').attr('class', 'bottomaxis').style("font", "1.8rem sans-serif").attr( 'transform', 'translate(0, 0)' ).call(xAxisB);
 
       //add some text labels
-      svgBottomAxis.append('text').text('X').attr('class', 'bottomaxistext').attr('x', width/2 + 100).attr('y', 40).attr('text-anchor', 'start').attr('fill', 'black');
+      svgBottomAxis.append('text').text('d').attr('class', 'bottomaxistext').attr('x', width/2 + 10).attr('y', 40).attr('text-anchor', 'start').attr('fill', 'black').style('font-weight', 'bold').style('font-style', 'italic');
 
     //add additional ticks
       //the minor ticks
