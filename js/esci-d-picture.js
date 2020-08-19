@@ -12,12 +12,12 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 
 0.2.0   2020-08-17  Version 2 
 0.2.1   2020-08-17  Slight tweak to make areas of overlap meet up.
-
+0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
 
 */
 //#endregion 
 
-let version = '0.2.1';
+let version = '0.2.2';
 
 'use strict';
 $(function() {

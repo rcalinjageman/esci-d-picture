@@ -11,7 +11,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 0.0.1   Initial version
 
 0.2.0   2020-08-17  Version 2 
-0.2.1
+0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
 
 #endregion */
 
@@ -53,6 +53,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 #breadcrumbs {
   border: 1px solid black;
+  font-size: 1.5rem;
 }
 
 /*----------------------------------Panels-----------------------------------------------------*/
@@ -60,7 +61,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 /*overrides*/
 
 #areas, #psuperioritypanel, #nrequiredpanel {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 /* #panels {
@@ -85,6 +86,10 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 /*----------------------Panel 1 Areas-------------------------------------------------------------------*/
 
+.areastip {
+  font-size: 1.8rem;
+}
+
 #areas {
   border: 1px solid black;
   background-color: #FFCC99; 
@@ -94,8 +99,9 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 }
 
 #shadelabel {
-  margin-top: 1rem;
+  margin-top: 0.0rem;
   margin-left: 30rem;
+  padding-bottom: 0.5rem;
 }
 
 #areassection {
@@ -109,8 +115,8 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #psuperioritypanel {
   background-color:#CCFFCC;
   border: 1px solid black;
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
   padding-left: 0.5rem;
 }
 
@@ -119,8 +125,8 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 #nrequiredpanel {
   background-color:#E6E6FA;
   border: 1px solid black;
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
   padding-left: 0.5rem;
 }
 
