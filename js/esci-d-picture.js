@@ -16,10 +16,12 @@ Licence       GNU General Public Licence Version 3, 29 June 2007
 0.2.3   2020-08-19  #4 Tweaks to overlap positions and viewability, including d line and value
 0.2.4   2020-08-19  #5 bottom axis label now d
 0.2.5   2020-08-19  #6 slider - tweak title and size
+0.2.6   2020-08-20  #10 Tooltips
+
 */
 //#endregion 
 
-let version = '0.2.5';
+let version = '0.2.6';
 
 'use strict';
 $(function() {
@@ -325,6 +327,7 @@ $(function() {
     //have to watch out as the width and height do not always seem precise to pixels
     //browsers apparently do not expose true element width, height.
     //also have to think about box model. outerwidth(true) gets full width, not sure resizeObserver does.
+
     resizeObserver.observe(pdfdisplay);  //note doesn't get true outer width, height
 
     width   = rwidth - margin.left - margin.right;  
@@ -375,9 +378,9 @@ $(function() {
     svgP.selectAll('.pdflabels').remove();
 
     svgP.append('line').attr('class', 'pdflabels').attr('x1', 30).attr('y1', 30).attr('x2', 60).attr('y2', 30).attr('stroke', 'blue').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Control').attr('class', 'pdflabels').attr('x', 70).attr('y', 35).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
+    svgP.append('text').text('Control (C)').attr('class', 'pdflabels').attr('x', 70).attr('y', 35).attr('text-anchor', 'start').attr('fill', 'blue').style('font-size', '1.7rem');
     svgP.append('line').attr('class', 'pdflabels').attr('x1', 30).attr('y1', 50).attr('x2', 60).attr('y2',50).attr('stroke', 'red').attr('stroke-width', 4).attr('fill', 'none');
-    svgP.append('text').text('Experimental').attr('class', 'pdflabels').attr('x', 70).attr('y', 55).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
+    svgP.append('text').text('Experimental (E)').attr('class', 'pdflabels').attr('x', 70).attr('y', 55).attr('text-anchor', 'start').attr('fill', 'red').style('font-size', '1.7rem');
 
 
     drawControlPDF();
@@ -386,9 +389,8 @@ $(function() {
     drawAreaProbabilities();
     displaystatistics();
 
-    //#region TESTING -------------------------------------------------------------------
-
-    //#endregion
+    calcCohensd();
+    drawCohensd();
   }
 
   /*-------------------------------------------Set up axes---------------------------------------------*/
@@ -404,8 +406,6 @@ $(function() {
     //setTopAxis();
     setBottomAxis();
     
-    calcCohensd();
-    drawCohensd();
   }
   
   // function setTopAxis() {
@@ -757,7 +757,7 @@ $(function() {
 
     nrequired = '-';
     if (cohensd !== 0) nrequired = Math.ceil(30.73 / (cohensd * cohensd));
-    if (nrequired > 10000) nrequired = '> 10,000';
+    //if (nrequired > 10000) nrequired = '> 10,000';
     $nrequired.text(nrequired);
   }
 
@@ -1187,6 +1187,17 @@ function updatesdexperimental() {
     Tipped.create('.headingtip',    'https://thenewstatistics.com',                   { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
 
     Tipped.create('.hometip',       'Click to return to esci Home',                   { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+
+    
+    Tipped.create('.areastip', 'See area values and control area shading', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+    Tipped.create('.shadetip', 'Click to shade areas under curves', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+    Tipped.create('.areaEaboveCtip', 'Shaded red', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+    Tipped.create('.areaCbelowEtip', 'Shaded blue', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+    Tipped.create('.areaoverlaptip', 'Shaded purple', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+
+    Tipped.create('.psuperioritytip', 'Probability that a randomly chosen value from E is greater than a randomly chosen value from C', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
+
+    Tipped.create('.nrequiredtip', 'Two independent groups, each of size <em>N</em>, will give a 95% CI on the difference between the means with MoE = <em>d</em>/2. I.e. CI length = <em>d</em>. Calculated <em>N</em> is rounded up to the next integer.', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });
 
     //spare
     // Tipped.create('. tip', '', { skin: 'esci', size: 'xlarge', showDelay: 750, behavior: 'mouse', target: 'mouse', maxWidth: 250, hideOthers: true, hideOnClickOutside: true, hideAfter: 0 });

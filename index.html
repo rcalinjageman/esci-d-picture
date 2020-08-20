@@ -11,7 +11,7 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
 0.2.0   2020-08-17  Version 2
 0.2.2   2020-08-19  #3 Tweaks to panel font sizes etc
-0.2.5   
+0.2.6   2020-08-20  #10 Tooltips 
 
 
 -->
@@ -144,19 +144,19 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 
           <div id=areas>
             <span class=areastip data-tooltip><span class=red>1 </span>Areas</span>
-            <div id=shadelabel>Shade?</div>
+            <div id=shadelabel class=shadetip data-tooltip>Shade?</div>
             <div id=areassection>
-              <div>Area of E above mean of C</div>
-              <div id=areaEaboveC>.00</div><span></span>
-              <input id=shadeareaEaboveC type=checkbox>
+              <div><span class=areaEaboveCtip data-tooltip>Area of E above mean of C</span></div>
+              <div id=areaEaboveC class=areaEaboveCtip data-tooltip>.00</div><span></span> <!--span needed for layout-->
+              <input id=shadeareaEaboveC class=areaEaboveCtip data-tooltip type=checkbox>
 
-              <div>Area of C below mean of E</div>
-              <div id=areaCbelowE>.00</div><span></span>
-              <input id=shadeareaCbelowE type=checkbox>
+              <div><span class=areaCbelowEtip data-tooltip>Area of C below mean of E</span></div>
+              <div id=areaCbelowE class=areaCbelowEtip data-tooltip>.00</div><span></span>
+              <input id=shadeareaCbelowE class=areaCbelowEtip data-tooltip type=checkbox>
 
-              <div>Overlap</div>
-              <div id=areaoverlap>.00</div><span></span>
-              <input id=shadeareaoverlap type=checkbox>
+              <div><span class=areaoverlaptip data-tooltip>Overlap</span></div>
+              <div id=areaoverlap class=areaoverlaptip data-tooltip>.00</div><span></span>
+              <input id=shadeareaoverlap class=areaoverlaptip data-tooltip type=checkbox>
 
             </div>
           </div>
@@ -164,13 +164,13 @@ Licence       GNU General Public LIcence Version 3, 29 June 2007
 <!-------------------------------------2 Probability of Superiority ----------------------------------------->                
 
           <div id=psuperioritypanel>
-            <div><span class=red>2</span> Probability of superiority &nbsp; <span id=psuperiority>0.0</span></div>
+            <div class=psuperioritytip data-tooltip><span class=red>2</span> Probability of superiority &nbsp; <span id=psuperiority>0.0</span></div>
           </div>
 
 <!-------------------------------------3 N required for sufficient precision ----------------------------------------->                
 
           <div id=nrequiredpanel>
-            <div><span class=red>3</span> <em>N</em> required for sufficient precision &nbsp; <span id=nrequired>0</span></div>
+            <div class=nrequiredtip data-tooltip><span class=red>3</span> <em>N</em> required for sufficient precision &nbsp; <span id=nrequired>0</span></div>
           </div>
 
 <!--------------------------------end of panels------------------------------------------>

@@ -1,6 +1,6 @@
 # esci-d-picture
 
-## Current version 0.2.5
+## Current version 0.2.6
 
 You can see which version by hovering on the logo.
 
